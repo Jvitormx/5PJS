@@ -16,11 +16,11 @@ A stack foi escolhida para unir tecnologias modernas de frontend e backend, alé
 ---
 
 ## Estrutura do Projeto
-frontend/ # Código do frontend (Vite + React)
-backend/ # Código do backend (FastAPI + Python)
-db/ # Scripts SQL para inicialização do banco
-docker-compose.yml
-README.md
+- frontend/ # Código do frontend (Vite + React)
+- backend/ # Código do backend (FastAPI + Python)
+- db/ # Scripts SQL para inicialização do banco
+- docker-compose.yml
+- README.md
 
 ---
 
@@ -50,10 +50,10 @@ docker-compose up --build
 ```
 
 ### 4. Acessar os serviços
-Frontend (React + Vite): http://localhost:5173
-Backend (FastAPI): http://localhost:8000/docs
-Banco (Postgres): localhost:5432
-PgAdmin: http://localhost:5050
+- Frontend (React + Vite): http://localhost:5173
+- Backend (FastAPI): http://localhost:8000/docs
+- Banco (Postgres): localhost:5432
+- PgAdmin: http://localhost:5050
 
 
 
