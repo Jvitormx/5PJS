@@ -16,11 +16,11 @@ A stack foi escolhida para unir tecnologias modernas de frontend e backend, alé
 ---
 
 ## Estrutura do Projeto
-├── frontend/ # Código do frontend (Vite + React)
-├── backend/ # Código do backend (FastAPI + Python)
-├── db/ # Scripts SQL para inicialização do banco
-├── docker-compose.yml
-└── README.md
+frontend/ # Código do frontend (Vite + React)
+backend/ # Código do backend (FastAPI + Python)
+db/ # Scripts SQL para inicialização do banco
+docker-compose.yml
+README.md
 
 ---
 
@@ -30,18 +30,24 @@ A stack foi escolhida para unir tecnologias modernas de frontend e backend, alé
 ```bash
 git clone https://github.com/seu-usuario/seu-repo.git
 cd seu-repo
+```
 
 ### 2. Criar arquiv .env
 Crie um arquivo .env na raiz com as variáveis de ambiente:
+
+```bash
 POSTGRES_USER=usuario
 POSTGRES_PASSWORD=1234
 POSTGRES_DB=db_5pjs
 DATABASE_URL=postgresql+psycopg2://usuario:1234@db:5432/db_5pjs
 PGADMIN_DEFAULT_EMAIL=admin@admin.com
 PGADMIN_DEFAULT_PASSWORD=admin
+```
 
 ### 3. Subir os containers
+```bash
 docker-compose up --build
+```
 
 ### 4. Acessar os serviços
 Frontend (React + Vite): http://localhost:5173
