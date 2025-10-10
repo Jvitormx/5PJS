@@ -1,3 +1,4 @@
+'''
 from typing import Optional
 import datetime
 import decimal
@@ -157,3 +158,4 @@ class InfoFatura(Base):
     fk_id_pedido_compra: Mapped[Optional[int]] = mapped_column(Integer)
 
     pedido_compra: Mapped[Optional['PedidoCompra']] = relationship('PedidoCompra', back_populates='info_fatura')
+'''
