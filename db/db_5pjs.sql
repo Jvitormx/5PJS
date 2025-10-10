@@ -1,22 +1,8 @@
 CREATE TABLE usuario (
     pk_usuario_id SERIAL PRIMARY KEY,
     email VARCHAR(255) UNIQUE NOT NULL,
-    senha_hash TEXT NOT NULL
-);
-
-CREATE TABLE comprador (
-    pk_usuario_id INT PRIMARY KEY REFERENCES usuario(pk_usuario_id),
-    cargo VARCHAR(255) NOT NULL
-);
-
-CREATE TABLE gerente (
-    pk_usuario_id INT PRIMARY KEY REFERENCES usuario(pk_usuario_id),
-    cargo VARCHAR(255) NOT NULL
-);
-
-CREATE TABLE administrador (
-    pk_usuario_id INT PRIMARY KEY REFERENCES usuario(pk_usuario_id),
-    cargo VARCHAR(255) NOT NULL
+    senha_hash TEXT NOT NULL,
+    tipo VARCHAR(50) NOT NULL CHECK (tipo IN ('administrador', 'comprador', 'gerente', 'fornecedor'))
 );
 
 CREATE TABLE fornecedor (
@@ -26,21 +12,21 @@ CREATE TABLE fornecedor (
     descricao TEXT 
 );
 
-INSERT INTO usuario (email, senha_hash) VALUES ('admin@brsupply.com', '1234');
-INSERT INTO administrador (pk_usuario_id, cargo) VALUES (1, 'administrador');
+INSERT INTO usuario (email, senha_hash, tipo) VALUES ('admin@brsupply.com', '1234', 'administrador');
 
 CREATE TABLE requisicao (
     pk_id_requisicao SERIAL PRIMARY KEY,
     data_requisicao TIMESTAMP NOT NULL DEFAULT NOW(),
     descricao TEXT NOT NULL,
     status VARCHAR(50) NOT NULL,
-    fk_id_comprador INT REFERENCES comprador(pk_usuario_id)
+    fk_id_comprador INT REFERENCES usuario(pk_usuario_id)
 );
 
 CREATE TABLE item_requisicao (
     pk_item_requisicao SERIAL PRIMARY KEY,
     descricao TEXT NOT NULL,
-    quantidade INT NOT NULL
+    quantidade INT NOT NULL,
+    fk_id_requisicao INT REFERENCES requisicao(pk_id_requisicao)
 );
 
 CREATE TABLE proposta (
@@ -48,7 +34,8 @@ CREATE TABLE proposta (
     preco_total DECIMAL(10,2) NOT NULL,
     prazo_entrega DATE NOT NULL,
     descricao_proposta TEXT,
-    fk_id_fornecedor INT REFERENCES fornecedor(pk_usuario_id)
+    fk_id_fornecedor INT REFERENCES fornecedor(pk_usuario_id),
+    fk_id_requisicao INT REFERENCES requisicao(pk_id_requisicao)
 );
 
 CREATE TABLE item_proposta (
@@ -64,7 +51,7 @@ CREATE TABLE pedido_compra (
     data_assinatura TIMESTAMP NOT NULL DEFAULT NOW(),
     assinatura_hash VARCHAR(255) NOT NULL,
     info TEXT,
-    fk_id_gerente INT REFERENCES gerente(pk_usuario_id),
+    fk_id_gerente INT REFERENCES usuario(pk_usuario_id),
     fk_id_proposta INT REFERENCES proposta(pk_id_proposta)
 );
 
