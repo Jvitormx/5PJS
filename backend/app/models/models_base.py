@@ -22,6 +22,11 @@ class Usuario(Base):
     senha_hash: Mapped[str] = mapped_column(Text, nullable=False)
     tipo: Mapped[str] = mapped_column(String(50), nullable=False)
 
+    __mapper_args__ = {
+        "polymorphic_on": tipo,
+        "polymorphic_identity": "usuario"
+    }
+
     requisicao: Mapped[list['Requisicao']] = relationship('Requisicao', back_populates='usuario')
     pedido_compra: Mapped[list['PedidoCompra']] = relationship('PedidoCompra', back_populates='usuario')
 
@@ -37,6 +42,10 @@ class Fornecedor(Usuario):
     cnpj: Mapped[str] = mapped_column(String(255), nullable=False)
     razao_social: Mapped[str] = mapped_column(String(255), nullable=False)
     descricao: Mapped[Optional[str]] = mapped_column(Text)
+
+    __mapper_args__ = {
+        "polymorphic_identity": "fornecedor"
+    }
 
     proposta: Mapped[list['Proposta']] = relationship('Proposta', back_populates='fornecedor')
 
