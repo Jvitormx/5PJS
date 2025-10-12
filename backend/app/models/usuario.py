@@ -1,7 +1,4 @@
-from database.connection import Base
-
-from requisicao import Requisicao
-from pedido_compra import PedidoCompra
+from app.database.connection import Base
 
 from sqlalchemy import CheckConstraint, Integer, PrimaryKeyConstraint, String, Text, UniqueConstraint, text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -25,7 +22,7 @@ class Usuario(Base):
         "polymorphic_identity": "usuario"
     }
 
-    requisicao: Mapped[list['Requisicao']] = relationship('Requisicao', back_populates='usuario')
-    pedido_compra: Mapped[list['PedidoCompra']] = relationship('PedidoCompra', back_populates='usuario')
+    requisicao: Mapped[list['Requisicao']] = relationship('Requisicao', back_populates='usuario') # type: ignore
+    pedido_compra: Mapped[list['PedidoCompra']] = relationship('PedidoCompra', back_populates='usuario') # type: ignore
 
 

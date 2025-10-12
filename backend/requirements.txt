@@ -40,5 +40,6 @@ websockets==15.0.1
 psycopg2-binary
 sqlalchemy
 requests
-passlib[bcrypt]
-
+passlib
+python-multipart
+python-jose[cryptography]

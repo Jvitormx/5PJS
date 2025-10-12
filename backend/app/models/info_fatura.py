@@ -1,6 +1,4 @@
-from database.connection import Base
-
-from pedido_compra import PedidoCompra
+from app.database.connection import Base
 
 from sqlalchemy import DateTime, ForeignKeyConstraint, Integer, Numeric, PrimaryKeyConstraint, String, Text, text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -23,4 +21,4 @@ class InfoFatura(Base):
     ref_arquivo_fatura: Mapped[Optional[str]] = mapped_column(String(255))
     fk_id_pedido_compra: Mapped[Optional[int]] = mapped_column(Integer)
 
-    pedido_compra: Mapped[Optional['PedidoCompra']] = relationship('PedidoCompra', back_populates='info_fatura')
+    pedido_compra: Mapped[Optional['PedidoCompra']] = relationship('PedidoCompra', back_populates='info_fatura') # type: ignore

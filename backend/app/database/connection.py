@@ -8,12 +8,12 @@ engine = create_engine(DATABASE_URL)
 
 Base = declarative_base()
 
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+Session = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 def get_db():
-    db_5pjs = SessionLocal()
+    db = Session()
     try:
-        yield db_5pjs
+        yield db
     finally:
-        db_5pjs.close()
+        db.close()
 

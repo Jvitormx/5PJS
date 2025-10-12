@@ -1,7 +1,4 @@
-from database.connection import Base
-
-from item_requisicao import ItemRequisicao
-from proposta import Proposta
+from app.database.connection import Base
 
 from sqlalchemy import ForeignKeyConstraint, Integer, Numeric, PrimaryKeyConstraint, String, Text, text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -20,5 +17,5 @@ class ItemProposta(Base):
     pk_id_item_proposta: Mapped[int] = mapped_column(Integer, primary_key=True)
     preco_individual: Mapped[decimal.Decimal] = mapped_column(Numeric(10, 2), nullable=False)
 
-    item_requisicao: Mapped['ItemRequisicao'] = relationship('ItemRequisicao', back_populates='item_proposta')
-    proposta: Mapped['Proposta'] = relationship('Proposta', back_populates='item_proposta')
+    item_requisicao: Mapped['ItemRequisicao'] = relationship('ItemRequisicao', back_populates='item_proposta') # type: ignore
+    proposta: Mapped['Proposta'] = relationship('Proposta', back_populates='item_proposta') # type: ignore

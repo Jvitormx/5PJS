@@ -1,8 +1,4 @@
-from database.connection import Base
-
-from usuario import Usuario
-from item_requisicao import ItemRequisicao
-from proposta import Proposta
+from app.database.connection import Base
 
 from sqlalchemy import DateTime, ForeignKeyConstraint, Integer, PrimaryKeyConstraint, String, Text, text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -23,6 +19,6 @@ class Requisicao(Base):
     status: Mapped[str] = mapped_column(String(50), nullable=False)
     fk_id_comprador: Mapped[Optional[int]] = mapped_column(Integer)
 
-    usuario: Mapped[Optional['Usuario']] = relationship('Usuario', back_populates='requisicao')
-    item_requisicao: Mapped[list['ItemRequisicao']] = relationship('ItemRequisicao', back_populates='requisicao')
-    proposta: Mapped[list['Proposta']] = relationship('Proposta', back_populates='requisicao')
+    usuario: Mapped[Optional['Usuario']] = relationship('Usuario', back_populates='requisicao') # type: ignore
+    item_requisicao: Mapped[list['ItemRequisicao']] = relationship('ItemRequisicao', back_populates='requisicao') # type: ignore
+    proposta: Mapped[list['Proposta']] = relationship('Proposta', back_populates='requisicao') # type: ignore

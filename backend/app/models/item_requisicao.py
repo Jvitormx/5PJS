@@ -1,7 +1,4 @@
-from database.connection import Base
-
-from requisicao import Requisicao
-from item_proposta import ItemProposta
+from app.database.connection import Base
 
 from sqlalchemy import ForeignKeyConstraint, Integer, PrimaryKeyConstraint, String, Text, text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -20,5 +17,5 @@ class ItemRequisicao(Base):
     quantidade: Mapped[int] = mapped_column(Integer, nullable=False)
     fk_id_requisicao: Mapped[Optional[int]] = mapped_column(Integer)
 
-    requisicao: Mapped[Optional['Requisicao']] = relationship('Requisicao', back_populates='item_requisicao')
-    item_proposta: Mapped[list['ItemProposta']] = relationship('ItemProposta', back_populates='item_requisicao')
+    requisicao: Mapped[Optional['Requisicao']] = relationship('Requisicao', back_populates='item_requisicao') # type: ignore
+    item_proposta: Mapped[list['ItemProposta']] = relationship('ItemProposta', back_populates='item_requisicao') # type: ignore

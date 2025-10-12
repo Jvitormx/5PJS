@@ -1,5 +1,4 @@
-from usuario import Usuario
-from proposta import Proposta
+from app.models.usuario import Usuario
 
 from sqlalchemy import ForeignKeyConstraint, Integer, PrimaryKeyConstraint, String, Text, text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -22,4 +21,4 @@ class Fornecedor(Usuario):
         "polymorphic_identity": "fornecedor"
     }
 
-    proposta: Mapped[list['Proposta']] = relationship('Proposta', back_populates='fornecedor')
+    proposta: Mapped[list['Proposta']] = relationship('Proposta', back_populates='fornecedor') # type: ignore

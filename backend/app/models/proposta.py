@@ -1,9 +1,4 @@
-from database.connection import Base
-
-from fornecedor import Fornecedor
-from requisicao import Requisicao
-from item_proposta import ItemProposta
-from pedido_compra import PedidoCompra
+from app.database.connection import Base
 
 from sqlalchemy import Date, ForeignKeyConstraint, Integer, Numeric, PrimaryKeyConstraint, String, Text, text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
