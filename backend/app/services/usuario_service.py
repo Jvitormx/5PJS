@@ -1,5 +1,6 @@
 from app.schemas.usuario_schema import Usuario, UsuarioCreate, UsuarioLogin, UsuarioUpdate
 from app.models import Usuario
+from typing import List
 from app.core.hashing import Hash
 from sqlalchemy.orm import Session
 from app.database.connection import get_db
@@ -28,13 +29,17 @@ def login_usuario(usuario: UsuarioLogin, db: Session) -> Usuario:
         return None
     return usuario_login
 
-def update_usuario(usuario: UsuarioUpdate, id: int, db: Session = Depends(get_db)):
+def update_usuario(usuario: UsuarioUpdate, id: int, db: Session) -> UsuarioUpdate:
     usuario_update = db.query(Usuario).filter(Usuario.pk_usuario_id == id)
-    usuario_update.update(
-        {'email':usuario.email,
-         'tipo': usuario.tipo}
-    )
+    usuario_update.update(usuario.model_dump(), synchronize_session=False)
+    db.commit()
 
-  
+    return usuario_update.first()
+
+def retornar_usuarios(db: Session) -> List[Usuario]:
+    usuarios = db.query(Usuario).all()
+    if not usuarios:
+        return None
+    return usuarios
 
 

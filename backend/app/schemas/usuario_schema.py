@@ -24,7 +24,7 @@ class Usuario(BaseModel):
     class Config:
         orm_mode = True
     
-class UsuarioCreate(UsuarioBase):
+class UsuarioCreate(Usuario):
     pass
 
 class UsuarioLogin(BaseModel):
@@ -34,6 +34,7 @@ class UsuarioLogin(BaseModel):
     class Config:
         orm_mode = True
 
-class UsuarioUpdate(UsuarioBase):
+class UsuarioUpdate(BaseModel):
+    pk_usuario_id: int = Field(..., description = 'identificador unico de usuario')
     email : Optional[EmailStr] = Field(None, min_length=5, max_length=255, description='email de usuario empresa/fornecedor')
-    tipo: Optional[str] = Field(None, description = 'separa usuarios em diferentes telas no sistema')
+    tipo: Optional[Tipo] = Field(None, description = 'separa usuarios em diferentes telas no sistema')
