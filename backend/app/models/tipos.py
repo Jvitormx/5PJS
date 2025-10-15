@@ -17,6 +17,4 @@ class Gerente_Tipo(Usuario):
     }
     
 class Fornecedor_Tipo(Usuario):
-       __mapper_args__ = {
-        "polymorphic_identity": "fornecedor",
-    }
+      pass

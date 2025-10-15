@@ -14,6 +14,7 @@ class Requisicao(Base):
     )
 
     pk_id_requisicao: Mapped[int] = mapped_column(Integer, primary_key=True)
+    titulo_requisicao: Mapped[str] = mapped_column(String(50), nullable=False)
     data_requisicao: Mapped[datetime.datetime] = mapped_column(DateTime, nullable=False, server_default=text('now()'))
     descricao: Mapped[str] = mapped_column(Text, nullable=False)
     status: Mapped[str] = mapped_column(String(50), nullable=False)

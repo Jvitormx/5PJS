@@ -19,7 +19,6 @@ class Usuario(Base):
 
     __mapper_args__ = {
         "polymorphic_on": tipo,
-        "polymorphic_identity": "usuario"
     }
 
     requisicao: Mapped[list['Requisicao']] = relationship('Requisicao', back_populates='usuario') # type: ignore

@@ -14,17 +14,17 @@ class UsuarioBase(BaseModel):
     tipo: Tipo = Field(default = Tipo.ADMIN, description = 'separa usuarios em diferentes telas no sistema')
 
     class Config:
-        orm_mode = True
+        from_attributes = True
         
-class Usuario(BaseModel):
+class UsuarioGet(BaseModel):
     pk_usuario_id: int = Field(..., description = 'identificador unico de usuario')
     email : EmailStr = Field(..., min_length=5, max_length=255, description='email de usuario empresa/fornecedor')
     tipo: Tipo = Field(default = Tipo.ADMIN, description = 'separa usuarios em diferentes telas no sistema')
 
     class Config:
-        orm_mode = True
+        from_attributes = True
     
-class UsuarioCreate(Usuario):
+class UsuarioCreate(UsuarioBase):
     pass
 
 class UsuarioLogin(BaseModel):
@@ -32,9 +32,11 @@ class UsuarioLogin(BaseModel):
     senha: str = Field(..., description = 'hash de senha de usuario')
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class UsuarioUpdate(BaseModel):
-    pk_usuario_id: int = Field(..., description = 'identificador unico de usuario')
     email : Optional[EmailStr] = Field(None, min_length=5, max_length=255, description='email de usuario empresa/fornecedor')
     tipo: Optional[Tipo] = Field(None, description = 'separa usuarios em diferentes telas no sistema')
+
+    class Config:
+        from_attributes = True

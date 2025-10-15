@@ -2,7 +2,7 @@ from typing import List
 from fastapi import HTTPException, Depends
 from sqlalchemy.orm import Session
 from starlette import status
-from app.schemas.usuario_schema import UsuarioCreate, UsuarioLogin, UsuarioUpdate, Usuario
+from app.schemas.usuario_schema import UsuarioCreate, UsuarioUpdate, UsuarioGet
 from fastapi import APIRouter
 from app.database.connection import get_db
 from app.services import usuario_service
@@ -21,7 +21,7 @@ def update_usuario(usuario: UsuarioUpdate, id: int, db: Session = Depends(get_db
         return None
     return usuario_atualizado
 
-@router.get('/', response_model=List[Usuario])
+@router.get('/', response_model=List[UsuarioGet])
 def listar_usuarios(db: Session = Depends(get_db)):
     lista_usuarios = usuario_service.retornar_usuarios(db = db)
     return lista_usuarios
