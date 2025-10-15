@@ -1,4 +1,4 @@
-from app.schemas.usuario_schema import Usuario, UsuarioCreate, UsuarioLogin, UsuarioUpdate
+from app.schemas.usuario_schema import UsuarioGet, UsuarioCreate, UsuarioLogin, UsuarioUpdate
 from app.models import Usuario
 from typing import List
 from app.core.hashing import Hash
@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from app.database.connection import get_db
 from fastapi import HTTPException, Depends
 
-def create_usuario(usuario: UsuarioCreate, db: Session) -> Usuario:
+def create_usuario(usuario: UsuarioCreate, db: Session) -> UsuarioGet:
     senha_pos_hash = Hash.hash_senha(usuario.senha_hash)
 
     novo_usuario = Usuario(
@@ -21,7 +21,7 @@ def create_usuario(usuario: UsuarioCreate, db: Session) -> Usuario:
 
     return novo_usuario
 
-def login_usuario(usuario: UsuarioLogin, db: Session) -> Usuario:
+def login_usuario(usuario: UsuarioLogin, db: Session) -> UsuarioGet:
     usuario_login = db.query(Usuario).filter(Usuario.email == usuario.email).first()
     if not usuario_login:
         return None
@@ -36,7 +36,7 @@ def update_usuario(usuario: UsuarioUpdate, id: int, db: Session) -> UsuarioUpdat
 
     return usuario_update.first()
 
-def retornar_usuarios(db: Session) -> List[Usuario]:
+def retornar_usuarios(db: Session) -> List[UsuarioGet]:
     usuarios = db.query(Usuario).all()
     if not usuarios:
         return None
