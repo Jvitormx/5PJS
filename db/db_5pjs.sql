@@ -9,13 +9,13 @@ CREATE TABLE fornecedor (
     pk_usuario_id INT PRIMARY KEY REFERENCES usuario(pk_usuario_id),
     cnpj VARCHAR(255) NOT NULL,
     razao_social VARCHAR(255) NOT NULL,
+    nota_qualidade FLOAT NULL,
     descricao TEXT 
 );
 
-INSERT INTO usuario (email, senha_hash, tipo) VALUES ('admin@brsupply.com', '1234', 'administrador');
-
 CREATE TABLE requisicao (
     pk_id_requisicao SERIAL PRIMARY KEY,
+    titulo_requisicao VARCHAR(50) NOT NULL,
     data_requisicao TIMESTAMP NOT NULL DEFAULT NOW(),
     descricao TEXT NOT NULL,
     status VARCHAR(50) NOT NULL,
