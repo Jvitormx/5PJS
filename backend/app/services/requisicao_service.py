@@ -52,3 +52,9 @@ def retornar_requisicao_items(id: int, db: Session) -> RequisicaoGet:
     if not requisicao:
         return None
     return requisicao
+
+def returnar_requisicao_itens_selecionados(id_itens: List[int], db: Session) -> List[ItemRequisicao]:
+    itens = db.query(ItemRequisicao).filter(ItemRequisicao.pk_id_item_requisicao.in_(id_itens)).all()
+    if not itens:
+        return None
+    return itens
