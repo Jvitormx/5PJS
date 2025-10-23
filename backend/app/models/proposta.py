@@ -19,11 +19,12 @@ class Proposta(Base):
     preco_total: Mapped[decimal.Decimal] = mapped_column(Numeric(10, 2), nullable=False)
     prazo_entrega: Mapped[datetime.date] = mapped_column(Date, nullable=False)
     descricao_proposta: Mapped[Optional[str]] = mapped_column(Text)
+    status_proposta: Mapped[str] = mapped_column(String(50), nullable=False)
     fk_id_fornecedor: Mapped[Optional[int]] = mapped_column(Integer)
     fk_id_requisicao: Mapped[Optional[int]] = mapped_column(Integer)
 
-    fornecedor: Mapped[Optional['Fornecedor']] = relationship('Fornecedor', back_populates='proposta')
-    requisicao: Mapped[Optional['Requisicao']] = relationship('Requisicao', back_populates='proposta')
-    item_proposta: Mapped[list['ItemProposta']] = relationship('ItemProposta', back_populates='proposta')
-    pedido_compra: Mapped[list['PedidoCompra']] = relationship('PedidoCompra', back_populates='proposta')
+    fornecedor: Mapped[Optional['Fornecedor']] = relationship('Fornecedor', back_populates='proposta') # type: ignore
+    requisicao: Mapped[Optional['Requisicao']] = relationship('Requisicao', back_populates='proposta') # type: ignore
+    item_proposta: Mapped[list['ItemProposta']] = relationship('ItemProposta', back_populates='proposta') # type: ignore
+    pedido_compra: Mapped[list['PedidoCompra']] = relationship('PedidoCompra', back_populates='proposta') # type: ignore
 

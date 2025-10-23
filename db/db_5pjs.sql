@@ -34,6 +34,7 @@ CREATE TABLE proposta (
     preco_total DECIMAL(10,2) NOT NULL,
     prazo_entrega DATE NOT NULL,
     descricao_proposta TEXT,
+    status_proposta VARCHAR(50) NOT NULL,
     fk_id_fornecedor INT REFERENCES fornecedor(pk_usuario_id),
     fk_id_requisicao INT REFERENCES requisicao(pk_id_requisicao)
 );

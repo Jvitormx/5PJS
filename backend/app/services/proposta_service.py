@@ -1,4 +1,4 @@
-from app.schemas.proposta_schema import CreateProposta, PropostaGet, PropostaGetAll
+from app.schemas.proposta_schema import CreateProposta, PropostaGet, PropostaGetFornecedor, PropostaGetAll
 from app.schemas.item_requisicao_schema import ItemRequisicaoBase
 from app.schemas.item_proposta_schema import ItemPropostaGetNested
 from app.models import Proposta, ItemProposta, Fornecedor, Requisicao
@@ -15,6 +15,7 @@ def create_proposta(proposta: CreateProposta, id_fornecedor: int, id_requisicao:
         preco_total = proposta.preco_total,
         prazo_entrega = proposta.prazo_entrega,
         descricao_proposta = proposta.descricao_proposta,
+        status_proposta = proposta.status_proposta,
         fk_id_fornecedor = id_fornecedor,
         fk_id_requisicao = id_requisicao
     )
@@ -40,7 +41,7 @@ def calcular_escore(preco_normalizado: float, peso_preco: float, qualidade_forne
     escore = (preco_normalizado * peso_preco) + (qualidade_fornecedor * peso_qualidade)
     return escore
 
-def retornar_propostas(id: int, db: Session) -> List[PropostaGetAll]:
+def retornar_propostas_requisicao(id: int, db: Session) -> List[PropostaGetAll]:
     propostas = db.query(Proposta, Fornecedor).join(Fornecedor).filter(Proposta.fk_id_requisicao == id).all()
     menor_preco = min(proposta.preco_total for proposta, _ in propostas) if propostas else 0
     propostas_por_escore = []
@@ -61,7 +62,20 @@ def retornar_propostas(id: int, db: Session) -> List[PropostaGetAll]:
 
     return propostas_por_escore
 
+def retornar_proposta_fornecedor(id_fornecedor: int, db: Session) -> List[PropostaGetFornecedor]:
+    propostas = db.query(Proposta, Requisicao).join(Requisicao).filter(Proposta.fk_id_fornecedor == id_fornecedor).all()
+    propostas_retorno = []
 
+    for proposta, requisicao in propostas:
+        proposta_dados = PropostaGetFornecedor(
+            id_proposta = proposta.pk_id_proposta,
+            requisicao_titulo = requisicao.titulo_requisicao,
+            preco_total = proposta.preco_total,
+            status_proposta = proposta.status_proposta
+        )
+        propostas_retorno.append(proposta_dados)
+
+    return propostas_retorno
 
 def retornar_proposta_items(id_proposta: int, fornecedor_nome: str, escore: float, db: Session) -> PropostaGet:
     proposta_requisicao = db.query(Proposta, Requisicao).join(Requisicao).options(selectinload(Proposta.item_proposta).selectinload(ItemProposta.item_requisicao))\
