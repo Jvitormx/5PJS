@@ -9,12 +9,12 @@ from app.services import usuario_service
 
 router = APIRouter(prefix='/usuarios', tags=['Usuarios'])
 
-@router.post('/criar', status_code=status.HTTP_201_CREATED, response_model=UsuarioCreate)
+@router.post('/', status_code=status.HTTP_201_CREATED, response_model=UsuarioCreate)
 def criar_novo_usuario(usuario: UsuarioCreate, db: Session = Depends(get_db)):
     novo_usuario = usuario_service.create_usuario(usuario = usuario, db = db)
     return novo_usuario
 
-@router.put('/update/{id}', response_model=UsuarioUpdate)
+@router.put('/{id}', response_model=UsuarioUpdate)
 def update_usuario(usuario: UsuarioUpdate, id: int, db: Session = Depends(get_db)):
     usuario_atualizado = usuario_service.update_usuario(usuario = usuario, id = id, db = db)
     if not usuario_atualizado:

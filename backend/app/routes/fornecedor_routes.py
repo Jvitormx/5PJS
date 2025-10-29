@@ -9,12 +9,12 @@ from app.services import fornecedor_service
 
 router = APIRouter(prefix='/fornecedores', tags=['Fornecedores'])
 
-@router.post('/criar', status_code=status.HTTP_201_CREATED, response_model=CreateFornecedor)
+@router.post('/', status_code=status.HTTP_201_CREATED, response_model=CreateFornecedor)
 def criar_novo_fornecedor(fornecedor: CreateFornecedor, db: Session = Depends(get_db)):
     novo_usuario = fornecedor_service.create_fornecedor(fornecedor = fornecedor, db = db)
     return novo_usuario
 
-@router.put('/update/{id}', response_model=UpdateFornecedor)
+@router.put('/{id}', response_model=UpdateFornecedor)
 def update_fornecedor(fornecedor: UpdateFornecedor, id: int, db: Session = Depends(get_db)):
     usuario_atualizado = fornecedor_service.update_fornecedor(fornecedor = fornecedor, id = id, db = db)
     if not usuario_atualizado:
