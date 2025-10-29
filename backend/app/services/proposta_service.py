@@ -1,8 +1,8 @@
-from app.schemas.proposta_schema import CreateProposta, PropostaGet, PropostaGetFornecedor, PropostaGetAll
+from app.schemas.proposta_schema import CreateProposta, PropostaGet, PropostaGetFornecedor, PropostaGetAll, PropostaUpdateStatus, PropostaUpdate, PropostaUpdateStatusRecusar
 from app.schemas.item_requisicao_schema import ItemRequisicaoBase
 from app.schemas.item_proposta_schema import ItemPropostaGetNested
 from app.models import Proposta, ItemProposta, Fornecedor, Requisicao
-from app.models import Pesos
+from app.models.pesos import Pesos
 from typing import List
 from sqlalchemy.orm import Session, selectinload
 from fastapi import HTTPException, Depends
@@ -109,4 +109,36 @@ def retornar_proposta_items(id_proposta: int, fornecedor_nome: str, escore: floa
     )
 
     return proposta_retorno
-        
+
+def update_proposta(proposta: PropostaUpdate, id: int, db: Session) -> PropostaUpdate:
+    proposta_update = db.query(Proposta).filter(Proposta.pk_id_proposta == id).first()
+    if not proposta_update:
+        return None
+    
+    proposta_update.update(proposta.model_dump(), synchronize_session=False)
+
+    db.commit()
+
+    return proposta_update
+
+def confirmar_proposta_por_id(proposta: PropostaUpdateStatus, id: int, db: Session) -> Proposta:
+    proposta_update_status = db.query(Proposta).filter(Proposta.pk_id_proposta == id).first()
+    if not proposta:
+        return None
+    
+    proposta_update_status.status_proposta = proposta.status_proposta
+
+    db.commit()
+
+    return proposta
+
+def recusar_proposta_por_id(proposta: PropostaUpdateStatusRecusar, id: int, db: Session) -> Proposta:
+    proposta_update_status = db.query(Proposta).filter(Proposta.pk_id_proposta == id).first()
+    if not proposta:
+        return None
+    
+    proposta_update_status.status_proposta = proposta.status_proposta
+
+    db.commit()
+
+    return proposta
