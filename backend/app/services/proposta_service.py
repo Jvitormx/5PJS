@@ -100,6 +100,7 @@ def retornar_proposta_items(id_proposta: int, fornecedor_nome: str, escore: floa
     proposta_retorno = PropostaGet(
         pk_id_proposta = proposta_orm.pk_id_proposta,
         requisicao_nome = requisicao_orm.titulo_requisicao,
+        fornecedor_nome = fornecedor_nome,
         descricao_proposta = proposta_orm.descricao_proposta,
         preco_total = proposta_orm.preco_total,
         prazo_entrega = proposta_orm.prazo_entrega,
