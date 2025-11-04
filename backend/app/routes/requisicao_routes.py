@@ -2,7 +2,7 @@ from typing import List
 from fastapi import HTTPException, Depends
 from sqlalchemy.orm import Session
 from starlette import status
-from app.schemas.requisicao_schema import CreateRequisicao, RequisicaoUpdate, RequisicaoGetAll, RequisicaoGet
+from app.schemas.requisicao_schema import CreateRequisicao, RequisicaoUpdate, RequisicaoGetAll, RequisicaoGet, RequisicaoGetGerente
 from fastapi import APIRouter
 from app.database.connection import get_db
 from app.services import requisicao_service
@@ -26,8 +26,13 @@ def listar_requisicoes(db: Session = Depends(get_db)):
     listar_requisicoes = requisicao_service.retornar_requisicoes(db = db)
     return listar_requisicoes
 
-@router.get('/{id}', response_model=RequisicaoGet)
+@router.get('/itens/{id}', response_model=RequisicaoGet)
 def listar_requisicao_items(id = id, db: Session = Depends(get_db)):
     listar_requisicao = requisicao_service.retornar_requisicao_items(id = id, db = db)
+    return listar_requisicao
+
+@router.get('/{id}', response_model=RequisicaoGetGerente)
+def listar_requisicao_gerente(id = id, db: Session = Depends(get_db)):
+    listar_requisicao = requisicao_service.retornar_requisicao_gerente(id = id, db = db)
     return listar_requisicao
              

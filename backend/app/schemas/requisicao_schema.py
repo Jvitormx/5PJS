@@ -23,6 +23,12 @@ class RequisicaoGet(RequisicaoBase):
     pk_id_requisicao: int = Field(..., description = 'identificador unico de uma requisicao')
     data_requisicao: datetime = Field(..., description = 'data de criacao de uma requisicao')
 
+class RequisicaoGetGerente(RequisicaoGet):
+    pk_id_proposta: int = Field(..., description = 'identificador unico de uma proposta')
+    fornecedor_nome: str = Field(..., description = 'nome do fornecedor que fez a proposta')
+    preco_total: float = Field(..., description = 'valor total de cada proposta referente a um item')
+    prazo_entrega: datetime = Field(..., description = 'prazo para entrega de bem/servico')
+    escore: float = Field(..., description='nivelamento da proposta com base em criterios pre-definidos')
 
 class RequisicaoGetAll(BaseModel):
     pk_id_requisicao: int = Field(..., description = 'identificador unico de uma requisicao')

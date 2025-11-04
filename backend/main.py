@@ -11,8 +11,4 @@ app.include_router(proposta_routes.router)
 
 @app.get("/")
 async def read_root():
-    return {"message":"Hello World"}
-
-@app.get("/hello/{name}")
-async def say_hello(name: str):
-    return {"message":f"Hello {name}"}
+    return {"teste":"Hello World"}

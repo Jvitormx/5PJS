@@ -42,7 +42,7 @@ def calcular_escore(preco_normalizado: float, peso_preco: float, qualidade_forne
     return escore
 
 def retornar_propostas_requisicao(id: int, db: Session) -> List[PropostaGetAll]:
-    propostas = db.query(Proposta, Fornecedor).join(Fornecedor).filter(Proposta.fk_id_requisicao == id).all()
+    propostas = db.query(Proposta, Fornecedor).join(Fornecedor).filter(Proposta.fk_id_requisicao == id, Proposta.status_proposta=='Pendente').all()
     menor_preco = min(proposta.preco_total for proposta, _ in propostas) if propostas else 0
     propostas_por_escore = []
 

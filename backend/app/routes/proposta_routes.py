@@ -29,14 +29,14 @@ def listar_propostas_fornecedor(id_fornecedor: int, db: Session = Depends(get_db
     propostas_fornecedor = proposta_service.retornar_proposta_fornecedor(id_fornecedor = id_fornecedor, db = db)
     return propostas_fornecedor
 
-@router.put('/{id}', response_model=PropostaUpdateStatus)
+@router.put('/confirmar/{id}', response_model=PropostaUpdateStatus)
 def confirmar_proposta(proposta: PropostaUpdateStatus, id: int, db: Session = Depends(get_db)):
     proposta_confirmada = proposta_service.confirmar_proposta_por_id(proposta = proposta, id = id, db = db)
     if not proposta_confirmada:
         return None
     return proposta_confirmada
 
-@router.put('/{id}', response_model=PropostaUpdateStatusRecusar)
+@router.put('/recursar/{id}', response_model=PropostaUpdateStatusRecusar)
 def recusar_proposta(proposta: PropostaUpdateStatus, id: int, db: Session = Depends(get_db)):
     proposta_confirmada = proposta_service.confirmar_proposta_por_id(proposta = proposta, id = id, db = db)
     if not proposta_confirmada:
