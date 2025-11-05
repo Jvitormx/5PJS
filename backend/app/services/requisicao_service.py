@@ -1,5 +1,5 @@
 from app.schemas.requisicao_schema import RequisicaoGet, RequisicaoGetAll, CreateRequisicao, RequisicaoUpdate, RequisicaoGetGerente
-from app.models import Requisicao, ItemRequisicao, Proposta
+from app.models import Requisicao, ItemRequisicao, Proposta, Fornecedor
 from typing import List
 from sqlalchemy.orm import Session
 from fastapi import HTTPException, Depends
@@ -60,10 +60,10 @@ def retornar_requisicao_items(id: int, db: Session) -> RequisicaoGet:
     return requisicao
 
 def retornar_requisicao_gerente(id: int, db: Session) -> RequisicaoGetGerente:
-    proposta_requisicao = db.query(Proposta, Requisicao).join(Requisicao).filter(Requisicao.pk_id_requisicao == id, Proposta.status_proposta == 'Confirmado').first()
+    proposta_requisicao = db.query(Proposta, Requisicao, Fornecedor).join(Requisicao).join(Fornecedor).filter(Requisicao.pk_id_requisicao == id, Proposta.status_proposta == 'Confirmado').first()
 
     if proposta_requisicao:
-        proposta_confirmada, requisicao = proposta_requisicao
+        proposta_confirmada, requisicao, fornecedor = proposta_requisicao
 
         requisicao_retorno = RequisicaoGetGerente(
             pk_id_requisicao = requisicao.pk_id_requisicao,
@@ -72,6 +72,7 @@ def retornar_requisicao_gerente(id: int, db: Session) -> RequisicaoGetGerente:
             status = requisicao.status,
             data_requisicao = requisicao.data_requisicao,
             pk_id_proposta = proposta_confirmada.pk_id_proposta,
+            fornecedor_nome = fornecedor.razao_social,
             preco_total = proposta_confirmada.preco_total,
             prazo_entrega = proposta_confirmada.prazo_entrega,
             escore = proposta_confirmada.escore
