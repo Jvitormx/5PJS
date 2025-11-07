@@ -43,3 +43,4 @@ requests
 passlib
 python-multipart
 python-jose[cryptography]
+pyjwt
