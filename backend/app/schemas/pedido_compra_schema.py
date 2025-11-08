@@ -14,13 +14,8 @@ class PedidoCompraBase(BaseModel):
 
 class PedidoCompraGet(BaseModel):
     pk_id_pedido_compra: int = Field(..., description = 'identificador unico de um pedido de compra')
-
-class PropostaGetFornecedor(BaseModel):
-    id_proposta: int = Field(..., description = 'identificador unico de uma requisicao')
-    requisicao_titulo: str = Field(..., description = 'titulo da requisicao a qual a proposta se refere')
-    preco_total: float = Field(..., description = 'valor total de cada proposta referente a um item')
-    status_proposta: str = Field(..., description = 'status atual da proposta')
     
 class CreatePedidoCompra(PedidoCompraBase):
-    pass
+    fk_id_gerente: int = Field(..., description = 'identificador unico do gerente associado ao pedido de compra')
+    fk_id_proposta: int = Field(..., description = 'identificador unico da proposta associada ao pedido de compra')
 
