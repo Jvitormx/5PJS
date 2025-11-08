@@ -17,7 +17,6 @@ class PedidoCompra(Base):
     pk_id_pedido_compra: Mapped[int] = mapped_column(Integer, primary_key=True)
     status: Mapped[str] = mapped_column(String(50), nullable=False)
     data_assinatura: Mapped[datetime.datetime] = mapped_column(DateTime, nullable=False, server_default=text('now()'))
-    assinatura_hash: Mapped[str] = mapped_column(String(255), nullable=False)
     info: Mapped[Optional[str]] = mapped_column(Text)
     fk_id_gerente: Mapped[Optional[int]] = mapped_column(Integer)
     fk_id_proposta: Mapped[Optional[int]] = mapped_column(Integer)

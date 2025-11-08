@@ -50,7 +50,6 @@ CREATE TABLE pedido_compra (
     pk_id_pedido_compra SERIAL PRIMARY KEY,
     status VARCHAR(50) NOT NULL,
     data_assinatura TIMESTAMP NOT NULL DEFAULT NOW(),
-    assinatura_hash VARCHAR(255) NOT NULL,
     info TEXT,
     fk_id_gerente INT REFERENCES usuario(pk_usuario_id),
     fk_id_proposta INT REFERENCES proposta(pk_id_proposta)
