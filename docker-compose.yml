@@ -27,7 +27,8 @@ services:
     environment: 
       - DATABASE_URL=${DATABASE_URL}
     depends_on: 
-      - db
+      db:
+        condition: service_healthy
 
   db:
     image: postgres:15
@@ -42,6 +43,12 @@ services:
     volumes: 
       - ./db/db_5pjs.sql:/docker-entrypoint-initdb.d/db_5pjs.sql
       - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
 
   pgadmin:
     image: dpage/pgadmin4
@@ -54,6 +61,32 @@ services:
       - "5050:80"
     depends_on: 
       - db
+
+  app:
+    depends_on:
+      docuseal_postgres:
+        condition: service_healthy
+    image: docuseal/docuseal:latest
+    ports:
+      - 3000:3000
+    volumes:
+      - ./docuseal:/data/docuseal
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@docuseal_postgres:5432/docuseal
+
+  docuseal_postgres:
+    image: postgres:15
+    volumes:
+      - './docuseal_pg_data:/var/lib/postgresql/data'
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: docuseal
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
 volumes:
   pgdata:
