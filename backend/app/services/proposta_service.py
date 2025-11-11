@@ -1,4 +1,4 @@
-from app.schemas.proposta_schema import CreateProposta, PropostaGet, PropostaGetFornecedor, PropostaGetAll, PropostaUpdateStatus, PropostaUpdate, PropostaUpdateStatusRecusar
+from app.schemas.proposta_schema import CreateProposta, PropostaGet, PropostaGetFornecedor, PropostaGetAll, PropostaUpdateStatus, PropostaUpdate
 from app.schemas.item_requisicao_schema import ItemRequisicaoBase
 from app.schemas.item_proposta_schema import ItemPropostaGetNested
 from app.models import Proposta, ItemProposta, Fornecedor, Requisicao
@@ -9,15 +9,15 @@ from fastapi import HTTPException, Depends
 
 Pesos = Pesos()
 
-def create_proposta(proposta: CreateProposta, id_fornecedor: int, id_requisicao: int, db: Session) -> CreateProposta:
+def create_proposta(proposta: CreateProposta, db: Session) -> CreateProposta:
 
     nova_proposta = Proposta(
         preco_total = proposta.preco_total,
         prazo_entrega = proposta.prazo_entrega,
         descricao_proposta = proposta.descricao_proposta,
         status_proposta = proposta.status_proposta,
-        fk_id_fornecedor = id_fornecedor,
-        fk_id_requisicao = id_requisicao
+        fk_id_fornecedor = proposta.id_fornecedor,
+        fk_id_requisicao = proposta.id_requisicao
     )
 
     db.add(nova_proposta)
@@ -41,8 +41,8 @@ def calcular_escore(preco_normalizado: float, peso_preco: float, qualidade_forne
     escore = (preco_normalizado * peso_preco) + (qualidade_fornecedor * peso_qualidade)
     return escore
 
-def retornar_propostas_requisicao(id: int, db: Session) -> List[PropostaGetAll]:
-    propostas = db.query(Proposta, Fornecedor).join(Fornecedor).filter(Proposta.fk_id_requisicao == id, Proposta.status_proposta=='Pendente').all()
+def retornar_propostas_requisicao(id_requisicao: int, db: Session) -> List[PropostaGetAll]:
+    propostas = db.query(Proposta, Fornecedor).join(Fornecedor).filter(Proposta.fk_id_requisicao == id_requisicao, Proposta.status_proposta=='Pendente').all()
     menor_preco = min(proposta.preco_total for proposta, _ in propostas) if propostas else 0
     propostas_por_escore = []
 
@@ -121,18 +121,7 @@ def update_proposta(proposta: PropostaUpdate, id: int, db: Session) -> PropostaU
 
     return proposta_update
 
-def confirmar_proposta_por_id(proposta: PropostaUpdateStatus, id: int, db: Session) -> Proposta:
-    proposta_update_status = db.query(Proposta).filter(Proposta.pk_id_proposta == id).first()
-    if not proposta:
-        return None
-    
-    proposta_update_status.status_proposta = proposta.status_proposta
-
-    db.commit()
-
-    return proposta
-
-def recusar_proposta_por_id(proposta: PropostaUpdateStatusRecusar, id: int, db: Session) -> Proposta:
+def alterar_proposta_status(proposta: PropostaUpdateStatus, id: int, db: Session) -> Proposta:
     proposta_update_status = db.query(Proposta).filter(Proposta.pk_id_proposta == id).first()
     if not proposta:
         return None

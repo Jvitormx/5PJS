@@ -40,16 +40,14 @@ class PropostaGetFornecedor(BaseModel):
     status_proposta: str = Field(..., description = 'status atual da proposta')
     
 class CreateProposta(PropostaBase):
-    pass
+    id_fornecedor: int = Field(..., description = 'identificador unico do fornecedor que fez a proposta')
+    id_requisicao: int = Field(..., description = 'identificador unico da requisicao a qual a proposta se refere')
 
 class PropostaUpdateStatus(BaseModel):
     status_proposta: str = Field(default='Selecionado', description = 'status atual da proposta')
 
     class Config:
         from_attributes = True
-
-class PropostaUpdateStatusRecusar(PropostaUpdateStatus):
-    status_proposta: str = Field(default='Recusado', description = 'status atual da proposta')
 
 class PropostaUpdate(BaseModel):
     descricao_proposta: Optional[str] = Field(None, description = 'descricao de uma proposta')
