@@ -46,9 +46,10 @@ class RequisicaoUpdate(BaseModel):
     titulo_requisicao: Optional[str] = Field(None, description = 'definir titulo da requisicao')
     descricao: Optional[str] = Field(None, description = 'descricao geral e motivacao de uma requisicao')
     status: Optional[Status] = Field(None, description = 'status de uma requisicao')
+    pk_id_requisicao: int = Field(..., description = 'identificador unico de uma requisicao')
 
     class Config:
         from_attributes = True
 
 class CreateRequisicao(RequisicaoBase):
-    pass
+    fk_id_comprador: int = Field(..., description = 'identificador do comprador que fez a requisicao')

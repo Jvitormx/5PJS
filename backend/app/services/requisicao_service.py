@@ -4,13 +4,13 @@ from typing import List
 from sqlalchemy.orm import Session
 from fastapi import HTTPException, Depends
 
-def create_requisicao(requisicao: CreateRequisicao, id: int, db: Session) -> RequisicaoGet:
+def create_requisicao(requisicao: CreateRequisicao, db: Session) -> dict:
 
     nova_requisicao = Requisicao(
         titulo_requisicao = requisicao.titulo_requisicao,
         descricao = requisicao.descricao,
         status = requisicao.status,
-        fk_id_comprador = id,
+        fk_id_comprador = requisicao.fk_id_comprador,
     )
 
     db.add(nova_requisicao)
@@ -28,10 +28,10 @@ def create_requisicao(requisicao: CreateRequisicao, id: int, db: Session) -> Req
     db.commit()
 
     db.refresh(nova_requisicao)
-    return nova_requisicao
+    return {"mensagem":"Requisicao criada com sucesso"}
 
-def update_requisicao(requisicao: RequisicaoUpdate, id: int, db: Session) -> RequisicaoUpdate:
-    requisicao_update = db.query(Requisicao).filter(Requisicao.pk_id_requisicao == id).first()
+def update_requisicao(requisicao: RequisicaoUpdate, db: Session) -> RequisicaoUpdate:
+    requisicao_update = db.query(Requisicao).filter(Requisicao.pk_id_requisicao == requisicao.pk_id_requisicao).first()
     if not requisicao_update:
         return None
     

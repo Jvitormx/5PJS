@@ -17,8 +17,11 @@ class PropostaBase(BaseModel):
 
 class PropostaGet(PropostaBase):
     pk_id_proposta: int = Field(..., description = 'identificador unico de uma requisicao')
-    fornecedor_nome: str = Field(..., description = 'nome do fornecedor que fez a proposta')
     requisicao_nome: str = Field(..., description = 'nome da requisicao a qual a proposta se refere')
+    fornecedor_nome: str = Field(..., description = 'nome do fornecedor que fez a proposta')
+    descricao_proposta: str = Field(..., description = 'descricao de uma proposta')
+    preco_total: float = Field(..., description = 'valor total de cada proposta referente a um item')
+    prazo_entrega: datetime = Field(..., description = 'prazo para entrega de bem/servico')
     escore: float = Field(..., description='nivelamento da proposta com base em criterios pre-definidos')
     item_proposta: List[ItemPropostaGetNested] = Field(..., description='items a que a proposta se refere')
 

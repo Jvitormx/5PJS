@@ -9,7 +9,7 @@ from fastapi import HTTPException, Depends
 
 Pesos = Pesos()
 
-def create_proposta(proposta: CreateProposta, db: Session) -> CreateProposta:
+def create_proposta(proposta: CreateProposta, db: Session) -> dict:
 
     nova_proposta = Proposta(
         preco_total = proposta.preco_total,
@@ -35,10 +35,10 @@ def create_proposta(proposta: CreateProposta, db: Session) -> CreateProposta:
     db.commit()
 
     db.refresh(nova_proposta)
-    return nova_proposta
+    return {"mensagem":"Proposta criada com sucesso"}
 
 def calcular_escore(preco_normalizado: float, peso_preco: float, qualidade_fornecedor: float, peso_qualidade: float) -> float:
-    escore = (preco_normalizado * peso_preco) + (qualidade_fornecedor * peso_qualidade)
+    escore = (float(preco_normalizado) * float(peso_preco)) + (float(qualidade_fornecedor) * float(peso_qualidade))
     return escore
 
 def retornar_propostas_requisicao(id_requisicao: int, db: Session) -> List[PropostaGetAll]:
