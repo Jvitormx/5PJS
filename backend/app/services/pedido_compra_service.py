@@ -1,9 +1,9 @@
-from app.schemas.pedido_compra_schema import CreatePedidoCompra, PedidoCompraGet
+from app.schemas.pedido_compra_schema import CreatePedidoCompra, PedidoCompraGet, PedidoCompraFinalizar
 from app.models import PedidoCompra, Proposta, Requisicao, Fornecedor, Usuario
 from typing import List
-from sqlalchemy.orm import Session, selectinload
+from sqlalchemy.orm import Session
 from fastapi import HTTPException, Depends
-from sqlalchemy import select, selectinload
+from sqlalchemy import select
 from datetime import datetime
 from app.services.docuseal_assinatura_service import criar_template_assinatura
 
@@ -50,4 +50,17 @@ def create_pedido_compra(pedido_compra: CreatePedidoCompra, db: Session) -> dict
         n_requisicao = n_requisicao
     )
 
+def finalizar_pedido_compra(pedido_compra: PedidoCompraFinalizar, db: Session) -> dict:
+    
+    statemant = (select(PedidoCompra).where(PedidoCompra.pk_id_pedido_compra == pedido_compra.pk_id_pedido_compra))
+    pedido_compra_db = db.execute(statemant).scalar_one_or_none()
 
+    if not pedido_compra_db:
+        raise HTTPException(status_code=404, detail="Pedido de compra não encontrado.")
+
+    pedido_compra_db.status = pedido_compra.status
+
+    db.commit()
+    db.refresh(pedido_compra_db)
+
+    return {"mensagem": "Pedido de compra finalizado com sucesso."}

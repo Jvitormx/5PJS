@@ -60,6 +60,6 @@ CREATE TABLE info_fatura (
     data_emissao TIMESTAMP NOT NULL DEFAULT NOW(),
     valor DECIMAL(10,2) NOT NULL,
     status VARCHAR(50) NOT NULL,
-    ref_arquivo_fatura VARCHAR(255),
+    ref_arquivo_fatura VARCHAR(255,
     fk_id_pedido_compra INT REFERENCES pedido_compra(pk_id_pedido_compra)
 );

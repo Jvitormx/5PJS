@@ -19,3 +19,6 @@ class CreatePedidoCompra(PedidoCompraBase):
     fk_id_gerente: int = Field(..., description = 'identificador unico do gerente associado ao pedido de compra')
     fk_id_proposta: int = Field(..., description = 'identificador unico da proposta associada ao pedido de compra')
 
+class PedidoCompraFinalizar(BaseModel):
+    pk_id_pedido_compra: int = Field(..., description = 'identificador unico do pedido de compra')
+    status: str = Field(default='Finalizado', description = 'novo status do pedido de compra')

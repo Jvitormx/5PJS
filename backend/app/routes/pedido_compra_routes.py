@@ -13,3 +13,7 @@ router = APIRouter(prefix='/pedido_compra', tags=['Pedido de Compra'])
 def criar_novo_pedido_compra(pedido_compra: CreatePedidoCompra, id_gerente: int, id_proposta: int, db: Session = Depends(get_db)):
     novo_pedido_compra = pedido_compra_service.create_pedido_compra(pedido_compra = pedido_compra, id_gerente = id_gerente, id_proposta = id_proposta, db = db)
     return novo_pedido_compra
+
+@router.post('/webhook', status_code=status.HTTP_200_OK)
+def receber_webhook_pedido_compra(payload: dict, db: Session = Depends(get_db)):
+    return {"mensagem": "Webhook processado com sucesso."}
