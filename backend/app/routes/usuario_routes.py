@@ -14,14 +14,14 @@ def criar_novo_usuario(usuario: UsuarioCreate, db: Session = Depends(get_db)):
     novo_usuario = usuario_service.create_usuario(usuario = usuario, db = db)
     return novo_usuario
 
-@router.put('/{id}', response_model=UsuarioUpdate)
+@router.put('/{id_usuario}', response_model=UsuarioUpdate)
 def update_usuario(usuario: UsuarioUpdate, id: int, db: Session = Depends(get_db)):
     usuario_atualizado = usuario_service.update_usuario(usuario = usuario, id = id, db = db)
     if not usuario_atualizado:
         return None
     return usuario_atualizado
 
-@router.get('/', response_model=List[UsuarioGet])
+@router.get('/listar-usuarios', response_model=List[UsuarioGet])
 def listar_usuarios(db: Session = Depends(get_db)):
     lista_usuarios = usuario_service.retornar_usuarios(db = db)
     return lista_usuarios

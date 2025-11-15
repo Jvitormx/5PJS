@@ -14,7 +14,7 @@ def criar_nova_proposta(proposta: CreateProposta, db: Session = Depends(get_db))
     nova_proposta = proposta_service.create_proposta(proposta = proposta, db = db)
     return nova_proposta
 
-@router.get('/por-requisicao/{id_requisicao}', response_model=List[PropostaGetAll])
+@router.get('/listar-por-requisicao/{id_requisicao}', response_model=List[PropostaGetAll])
 def listar_propostas_requisicao(id_requisicao: int, db: Session = Depends(get_db)):
     listar_propostas = proposta_service.retornar_propostas_requisicao(id_requisicao = id_requisicao, db = db)
     return listar_propostas
@@ -24,7 +24,7 @@ def listar_proposta_itens(id_proposta: int, nome_fornecedor: str, escore: float,
     listar_proposta = proposta_service.retornar_proposta_items(id_proposta = id_proposta, fornecedor_nome = nome_fornecedor, escore = escore, db = db)
     return listar_proposta
 
-@router.get('/por-fornecedor/{id_fornecedor}', response_model=List[PropostaGetFornecedor])
+@router.get('/listar-por-fornecedor/{id_fornecedor}', response_model=List[PropostaGetFornecedor])
 def listar_propostas_fornecedor(id_fornecedor: int, db: Session = Depends(get_db)):
     propostas_fornecedor = proposta_service.retornar_proposta_fornecedor(id_fornecedor = id_fornecedor, db = db)
     return propostas_fornecedor
@@ -36,7 +36,7 @@ def update_status(proposta: PropostaUpdateStatus, id_proposta: int, db: Session 
         return None
     return proposta_confirmada
 
-@router.put('/atualizar-status/{id}', response_model=PropostaUpdate)
+@router.put('/atualizar-status/{id_proposta}', response_model=PropostaUpdate)
 def update_proposta(proposta: PropostaUpdate, id: int, db: Session = Depends(get_db)):
     proposta_atualizada = proposta_service.update_proposta(proposta = proposta, id = id, db = db)
     if not proposta_atualizada:
