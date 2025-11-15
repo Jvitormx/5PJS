@@ -41,6 +41,9 @@ class PropostaGetFornecedor(BaseModel):
     requisicao_titulo: str = Field(..., description = 'titulo da requisicao a qual a proposta se refere')
     preco_total: float = Field(..., description = 'valor total de cada proposta referente a um item')
     status_proposta: str = Field(..., description = 'status atual da proposta')
+
+    class Config:
+        from_attributes = True
     
 class CreateProposta(PropostaBase):
     id_fornecedor: int = Field(..., description = 'identificador unico do fornecedor que fez a proposta')
