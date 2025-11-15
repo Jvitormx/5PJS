@@ -14,25 +14,30 @@ def criar_nova_requisicao(requisicao: CreateRequisicao, db: Session = Depends(ge
     nova_requisicao = requisicao_service.create_requisicao(requisicao = requisicao, db = db)
     return nova_requisicao
 
-@router.put('/', response_model=RequisicaoUpdate)
+@router.put('/update-requisicoes', response_model=RequisicaoUpdate)
 def update_requisicao(requisicao: RequisicaoUpdate, db: Session = Depends(get_db)):
     requisicao_atualizada = requisicao_service.update_requisicao(requisicao = requisicao, db = db)
     if not requisicao_atualizada:
         return None
     return requisicao_atualizada
 
-@router.get('/', response_model=List[RequisicaoGetAll])
+@router.get('/listar', response_model=List[RequisicaoGetAll])
 def listar_requisicoes(db: Session = Depends(get_db)):
     listar_requisicoes = requisicao_service.retornar_requisicoes(db = db)
     return listar_requisicoes
-
-@router.get('/itens/{id}', response_model=RequisicaoGet)
+    
+@router.get('/requisicao/{id_requisicao}', response_model=RequisicaoGet)
 def listar_requisicao_items(id = id, db: Session = Depends(get_db)):
     listar_requisicao = requisicao_service.retornar_requisicao_items(id = id, db = db)
     return listar_requisicao
 
-@router.get('/{id}', response_model=RequisicaoGetGerente)
-def listar_requisicao_gerente(id = id, db: Session = Depends(get_db)):
-    listar_requisicao = requisicao_service.retornar_requisicao_gerente(id = id, db = db)
+@router.get('/listar-requisicoes-gerente', response_model=List[RequisicaoGetAll])
+def listar_requisicoes(db: Session = Depends(get_db)):
+    listar_requisicoes = requisicao_service.retornar_requisicoes_gerente(db = db)
+    return listar_requisicoes
+
+@router.get('/requisicao-gerente/{id_requisicao}', response_model=RequisicaoGetGerente)
+def listar_requisicao_gerente(id_requisicao: int, db: Session = Depends(get_db)):
+    listar_requisicao = requisicao_service.retornar_requisicao_gerente(id_requisicao = id_requisicao, db = db)
     return listar_requisicao
              

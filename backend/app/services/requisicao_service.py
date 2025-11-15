@@ -42,7 +42,7 @@ def update_requisicao(requisicao: RequisicaoUpdate, db: Session) -> RequisicaoUp
     return requisicao_update
 
 def retornar_requisicoes_gerente(db: Session) -> List[RequisicaoGetAll]:
-    requisicoes = db.query(Requisicao).join(Proposta).filter(Proposta.status == 'Confirmado').all()
+    requisicoes = db.query(Requisicao).join(Proposta).filter(Proposta.status_proposta == 'Selecionado').all()
     if not requisicoes:
         return None
     return requisicoes
@@ -59,8 +59,18 @@ def retornar_requisicao_items(id: int, db: Session) -> RequisicaoGet:
         return None
     return requisicao
 
-def retornar_requisicao_gerente(id: int, db: Session) -> RequisicaoGetGerente:
-    proposta_requisicao = db.query(Proposta, Requisicao, Fornecedor).join(Requisicao).join(Fornecedor).filter(Requisicao.pk_id_requisicao == id, Proposta.status_proposta == 'Confirmado').first()
+def retornar_requisicao_gerente(id_requisicao: int, db: Session) -> RequisicaoGetGerente:
+
+    proposta_requisicao = (
+        db.query(Proposta, Requisicao, Fornecedor)
+        .join(Requisicao, Proposta.fk_id_requisicao == Requisicao.pk_id_requisicao) 
+        .join(Fornecedor, Proposta.fk_id_fornecedor == Fornecedor.pk_usuario_id) 
+        .filter(
+            Requisicao.pk_id_requisicao == id_requisicao, 
+            Proposta.status_proposta == 'Selecionado'
+        )
+        .first()
+    )
 
     if proposta_requisicao:
         proposta_confirmada, requisicao, fornecedor = proposta_requisicao
@@ -69,16 +79,18 @@ def retornar_requisicao_gerente(id: int, db: Session) -> RequisicaoGetGerente:
             pk_id_requisicao = requisicao.pk_id_requisicao,
             titulo_requisicao = requisicao.titulo_requisicao,
             descricao = requisicao.descricao,
+            item_requisicao = requisicao.item_requisicao,
             status = requisicao.status,
             data_requisicao = requisicao.data_requisicao,
             pk_id_proposta = proposta_confirmada.pk_id_proposta,
             fornecedor_nome = fornecedor.razao_social,
             preco_total = proposta_confirmada.preco_total,
             prazo_entrega = proposta_confirmada.prazo_entrega,
-            escore = proposta_confirmada.escore
         )
 
         return requisicao_retorno
+    
+    return None
 
 def returnar_requisicao_itens_selecionados(id_itens: List[int], db: Session) -> List[ItemRequisicao]:
     itens = db.query(ItemRequisicao).filter(ItemRequisicao.pk_id_item_requisicao.in_(id_itens)).all()

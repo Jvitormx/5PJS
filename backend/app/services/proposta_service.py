@@ -1,3 +1,4 @@
+from sqlalchemy import select
 from app.schemas.proposta_schema import CreateProposta, PropostaGet, PropostaGetFornecedor, PropostaGetAll, PropostaUpdateStatus, PropostaUpdate
 from app.schemas.item_requisicao_schema import ItemRequisicaoBase
 from app.schemas.item_proposta_schema import ItemPropostaGetNested
@@ -63,10 +64,17 @@ def retornar_propostas_requisicao(id_requisicao: int, db: Session) -> List[Propo
     return propostas_por_escore
 
 def retornar_proposta_fornecedor(id_fornecedor: int, db: Session) -> List[PropostaGetFornecedor]:
-    propostas = db.query(Proposta, Requisicao).join(Requisicao).filter(Proposta.fk_id_fornecedor == id_fornecedor).all()
-    propostas_retorno = []
 
-    for proposta, requisicao in propostas:
+    stmt = (
+        select(Proposta, Requisicao)
+        .join(Requisicao)
+        .where(Proposta.fk_id_fornecedor == id_fornecedor)
+    )
+
+    propostas_com_requisicoes = db.execute(stmt).all()
+
+    propostas_retorno = []
+    for proposta, requisicao in propostas_com_requisicoes:
         proposta_dados = PropostaGetFornecedor(
             id_proposta = proposta.pk_id_proposta,
             requisicao_titulo = requisicao.titulo_requisicao,
@@ -92,7 +100,7 @@ def retornar_proposta_items(id_proposta: int, fornecedor_nome: str, escore: floa
             quantidade = item.item_requisicao.quantidade
         )
         item_proposta_dados = ItemPropostaGetNested(
-            preco_individual = item.item_proposta.preco_individual,
+            preco_individual = item.preco_individual,
             item_requisicao = item_requisicao_dados
         )
         itens_retorno.append(item_proposta_dados)
@@ -121,8 +129,8 @@ def update_proposta(proposta: PropostaUpdate, id: int, db: Session) -> PropostaU
 
     return proposta_update
 
-def alterar_proposta_status(proposta: PropostaUpdateStatus, id: int, db: Session) -> Proposta:
-    proposta_update_status = db.query(Proposta).filter(Proposta.pk_id_proposta == id).first()
+def alterar_proposta_status(proposta: PropostaUpdateStatus, id_proposta: int, db: Session) -> Proposta:
+    proposta_update_status = db.query(Proposta).filter(Proposta.pk_id_proposta == id_proposta).first()
     if not proposta:
         return None
     
