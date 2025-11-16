@@ -8,6 +8,7 @@ class PedidoCompraBase(BaseModel):
     status: str = Field(default='Pendente', description = 'status atual do pedido de compra')
     data_assinatura: datetime = Field(..., description = 'timestamp de assinatura do pedido de compra')
     info: str = Field(default='esign utilizando Docuseal', description = 'informacoes adicionais do pedido de compra e esign')
+    esign_id: str = Field(..., description = 'identificador do contrato entre a empresa e fornecedor')
     
     class Config:
         from_attributes = True

@@ -13,7 +13,3 @@ router = APIRouter(prefix='/info_fatura', tags=['Info Fatura'])
 def criar_info_fatura(info_fatura: CreateInfoFatura, db: Session = Depends(get_db)):
     nova_info_fatura = info_fatura_service.create_info_fatura(info_fatura = info_fatura, db = db)
     return nova_info_fatura
-
-@router.post('/webhook', status_code=status.HTTP_200_OK)
-def receber_webhook_pedido_compra(payload: dict, db: Session = Depends(get_db)):
-    return {"mensagem": "Webhook processado com sucesso."}
