@@ -1,4 +1,5 @@
 from app.schemas.pedido_compra_schema import CreatePedidoCompra, PedidoCompraGet, PedidoCompraFinalizar
+from app.schemas.webhook_schema import WebhookPayload
 from app.models import PedidoCompra, Proposta, Requisicao, Fornecedor, Usuario
 from typing import List
 from sqlalchemy.orm import Session
@@ -26,19 +27,7 @@ def create_pedido_compra(pedido_compra: CreatePedidoCompra, db: Session) -> dict
     n_proposta = str(proposta.pk_id_proposta)
     n_requisicao = str(requisicao.pk_id_requisicao)
 
-    novo_pedido_compra = PedidoCompra(
-        status = pedido_compra.status,
-        data_assinatura = pedido_compra.data_assinatura,
-        info = pedido_compra.info,
-        fk_id_gerente = id_gerente,
-        fk_id_proposta = id_proposta
-    )
-
-    db.add(novo_pedido_compra)
-    db.commit()
-    db.refresh(novo_pedido_compra)
-
-    return criar_template_assinatura(
+    template = criar_template_assinatura(
         email_gerente = gerente.Usuario.email,
         email_fornecedor = fornecedor.email,
         razao_social = fornecedor.razao_social,
@@ -49,6 +38,21 @@ def create_pedido_compra(pedido_compra: CreatePedidoCompra, db: Session) -> dict
         n_proposta = n_proposta,
         n_requisicao = n_requisicao
     )
+    
+    novo_pedido_compra = PedidoCompra(
+        status = pedido_compra.status,
+        data_assinatura = pedido_compra.data_assinatura,
+        info = pedido_compra.info,
+        esign_id = template['submission_id'],
+        fk_id_gerente = id_gerente,
+        fk_id_proposta = id_proposta
+    )
+
+    db.add(novo_pedido_compra)
+    db.commit()
+    db.refresh(novo_pedido_compra)
+
+    return template
 
 def finalizar_pedido_compra(pedido_compra: PedidoCompraFinalizar, db: Session) -> dict:
     
@@ -64,3 +68,15 @@ def finalizar_pedido_compra(pedido_compra: PedidoCompraFinalizar, db: Session) -
     db.refresh(pedido_compra_db)
 
     return {"mensagem": "Pedido de compra finalizado com sucesso."}
+
+def atualizar_pedido_compra(payload: WebhookPayload, db: Session) -> dict:
+    statement = (select(PedidoCompra).where(PedidoCompra.esign_id == payload.data.submission.id))
+    pedido_compra_db = db.execute(statement).scalar_one_or_none()
+
+    if not pedido_compra_db:
+        raise HTTPException(status_code=404, detail="Pedido de compra não encontrado.")
+
+    pedido_compra_db.status = 'Em andamento'
+
+    db.commit()
+    db.refresh(pedido_compra_db)
