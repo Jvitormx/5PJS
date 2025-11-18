@@ -1,18 +1,17 @@
-const BASE_URL = import.meta.env.VITE_API || 'http://localhost:8000';
+import axios from 'axios';
 
-export const getBackendTeste = async () => {
-  try {
-    const response = await fetch(`${BASE_URL}/fornecedores/`);
-    
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    
-    const data = await response.json();
-    return data;
+const api = axios.create({
+  baseURL: import.meta.env.VITE_API || 'http://localhost:8000',
+});
 
-  } catch (error) {
-    console.error("Failed to fetch from backend:", error);
-    return { error: "Could not connect to backend." };
+api.interceptors.request.use((config) => {
+  const userId = localStorage.getItem('usuarioId');
+  
+  if (userId) {
+    config.headers['x-user-id'] = userId; 
   }
-};
+  
+  return config;
+});
+
+export default api;

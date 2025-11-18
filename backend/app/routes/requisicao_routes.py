@@ -21,9 +21,9 @@ def update_requisicao(requisicao: RequisicaoUpdate, db: Session = Depends(get_db
         return None
     return requisicao_atualizada
 
-@router.get('/listar', response_model=List[RequisicaoGetAll])
-def listar_requisicoes(db: Session = Depends(get_db)):
-    listar_requisicoes = requisicao_service.retornar_requisicoes(db = db)
+@router.get('/listar/{id_comprador}', response_model=List[RequisicaoGetAll])
+def listar_requisicoes(id_comprador: int, db: Session = Depends(get_db)):
+    listar_requisicoes = requisicao_service.retornar_requisicoes(id_comprador = id_comprador, db = db)
     return listar_requisicoes
     
 @router.get('/requisicao/{id_requisicao}', response_model=RequisicaoGet)
