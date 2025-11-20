@@ -51,7 +51,7 @@ CREATE TABLE pedido_compra (
     status VARCHAR(50) NOT NULL,
     data_assinatura TIMESTAMP NOT NULL DEFAULT NOW(),
     info TEXT,
-    esign_id VARCHAR(50),
+    esign_id VARCHAR(50) NOT NULL,
     fk_id_gerente INT REFERENCES usuario(pk_usuario_id),
     fk_id_proposta INT REFERENCES proposta(pk_id_proposta)
 );

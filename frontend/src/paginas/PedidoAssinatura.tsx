@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
-import { DocusealForm } from "@docuseal/react";
-import { useParams, useNavigate, useLocation } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 import api from "../services/api";
 
 interface Proposta {
@@ -51,7 +50,6 @@ function ItensPropostaDescricao({
 }
 
 function FinalizarPedidoCompra() {
-  const navigate = useNavigate();
   const { id_proposta } = useParams() as { id_proposta: string };
 
   const [signatureSlug, setSignatureSlug] = useState<string>("");
@@ -105,14 +103,14 @@ function FinalizarPedidoCompra() {
     return (
       <div className="p-6 min-h-screen w-full">
         <h2 className="text-2xl font-bold mb-4">Assinar Documento</h2>
-
-        <DocusealForm
-          src={`http://localhost:3000/s/${signatureSlug}`}
-          onComplete={() => {
-            alert("Assinatura concluída. Voltando ao painel.");
-            navigate("/portal");
-          }}
-        />
+        <button
+          className="btn"
+          onClick={() =>
+            window.open(`http://localhost:3000/s/${signatureSlug}`, "_blank")
+          }
+        >
+          Acessar contrato
+        </button>
       </div>
     );
   }

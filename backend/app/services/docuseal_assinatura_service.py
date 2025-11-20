@@ -37,7 +37,7 @@ def criar_template_assinatura(email_gerente: str,
                 "email": email_gerente,
                 "role": "BrasilSupply - Gerente",
                 "send_email": False,
-                "completed": True,
+                "completed": False,
             },
             {
                 "email": email_fornecedor,
@@ -59,6 +59,5 @@ def criar_template_assinatura(email_gerente: str,
     submission = response.json()
 
     return {
-        "slug": submission['submitters'][0]['slug'],
-        "submission_id": submission['id']
+        "slug": submission[0]['slug']
     }

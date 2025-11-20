@@ -13,7 +13,7 @@ class PedidoCompraBase(BaseModel):
     class Config:
         from_attributes = True
 
-class PedidoCompraGet(BaseModel):
+class PedidoCompraGet(PedidoCompraBase):
     pk_id_pedido_compra: int = Field(..., description = 'identificador unico de um pedido de compra')
     
 class CreatePedidoCompra(PedidoCompraBase):

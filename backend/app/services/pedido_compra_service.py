@@ -54,9 +54,21 @@ def create_pedido_compra(pedido_compra: CreatePedidoCompra, id_gerente: int, id_
 
     return template
 
+def retornar_pedido_compra_fornecedor(id_fornecedor: int, db: Session) -> List[PedidoCompraGet]:
+    pedido_compra = db.query(PedidoCompra).join(Proposta).join(Fornecedor).filter(Proposta.fk_id_fornecedor == id_fornecedor).all()
+    if not pedido_compra:
+        return None
+    return pedido_compra
+
+def retornar_pedido_compra_gerente(db: Session) -> List[PedidoCompraGet]:
+    pedido_compra = db.query(PedidoCompra).all()
+    if not pedido_compra:
+        return None
+    return pedido_compra
+
 def finalizar_pedido_compra(pedido_compra: PedidoCompraFinalizar, db: Session) -> dict:
     
-    statemant = (select(PedidoCompra).where(PedidoCompra.pk_id_pedido_compra == pedido_compra.pk_id_pedido_compra))
+    statemant = (select(PedidoCompra).where(PedidoCompra.fk_id_proposta == pedido_compra.pk_id_pedido_compra))
     pedido_compra_db = db.execute(statemant).scalar_one_or_none()
 
     if not pedido_compra_db:

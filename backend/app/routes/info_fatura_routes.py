@@ -13,3 +13,8 @@ router = APIRouter(prefix='/info_fatura', tags=['Info Fatura'])
 def criar_info_fatura(info_fatura: CreateInfoFatura, db: Session = Depends(get_db)):
     nova_info_fatura = info_fatura_service.create_info_fatura(info_fatura = info_fatura, db = db)
     return nova_info_fatura
+
+@router.get('/{id_pedido_compra}', response_model=InfoFaturaGet)
+def retornar_info_fatura(id_pedido_compra: int, db: Session = Depends(get_db)):
+    info_fatura = info_fatura_service.get_info_fatura(id_pedido_compra = id_pedido_compra, db = db)
+    return info_fatura
