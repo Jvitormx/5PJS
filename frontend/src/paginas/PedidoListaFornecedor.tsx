@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import api from "../services/api";
-import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 
 interface Pedido {
@@ -17,9 +16,7 @@ function Lista() {
   useEffect(() => {
     const fetchPedidos = async () => {
       try {
-        const comprador_id = localStorage.getItem("usuarioId");
-
-        const response = await api.get(`/requisicoes/listar/${comprador_id}`);
+        const response = await api.get("/requisicoes/listar_fornecedor");
         setPedidos(response.data);
       } catch (error) {
         console.error("Erro ao buscar pedidos", error);
@@ -65,19 +62,9 @@ function Lista() {
   );
 }
 
-function BotaoCriarPA() {
-  const navigate = useNavigate();
-  return (
-    <button className="btn btn-wide" onClick={() => navigate("novo")}>
-      Criar Pedido de Aquisição
-    </button>
-  );
-}
-
 export default function PedidoLista() {
   return (
     <>
-      <BotaoCriarPA />
       <Lista />
     </>
   );

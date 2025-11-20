@@ -8,7 +8,7 @@ from sqlalchemy import select
 from datetime import datetime
 from app.services.docuseal_assinatura_service import criar_template_assinatura
 
-def create_pedido_compra(pedido_compra: CreatePedidoCompra, db: Session) -> dict:
+def create_pedido_compra(pedido_compra: CreatePedidoCompra, id_gerente: int, id_proposta: int, db: Session) -> dict:
     
     id_gerente = pedido_compra.fk_id_gerente
     id_proposta = pedido_compra.fk_id_proposta
@@ -18,12 +18,12 @@ def create_pedido_compra(pedido_compra: CreatePedidoCompra, db: Session) -> dict
     
     proposta, requisicao, fornecedor = db.execute(statemant).first()
 
-    statemant = (select(Usuario).where(Usuario.pk_id_usuario == id_gerente))
+    statemant = (select(Usuario).where(Usuario.pk_usuario_id == id_gerente))
     gerente = db.execute(statemant).first()
 
     data_assin = datetime.now().strftime("%d/%m/%Y")
     prazo_entrega = proposta.prazo_entrega.strftime("%d/%m/%Y")
-    total = str(proposta.total)
+    total = str(proposta.preco_total)
     n_proposta = str(proposta.pk_id_proposta)
     n_requisicao = str(requisicao.pk_id_requisicao)
 
@@ -43,7 +43,7 @@ def create_pedido_compra(pedido_compra: CreatePedidoCompra, db: Session) -> dict
         status = pedido_compra.status,
         data_assinatura = pedido_compra.data_assinatura,
         info = pedido_compra.info,
-        esign_id = template['submission_id'],
+        esign_id = template['slug'],
         fk_id_gerente = id_gerente,
         fk_id_proposta = id_proposta
     )

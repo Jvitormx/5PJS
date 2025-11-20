@@ -2,7 +2,7 @@ from typing import List, Optional
 from pydantic import Field, BaseModel
 from datetime import datetime
 from enum import StrEnum
-from app.schemas.item_requisicao_schema import ItemRequisicaoBase
+from app.schemas.item_requisicao_schema import ItemRequisicaoBase, ItemRequisicaoGet
 
 class Status(StrEnum):
     ABERTO = "aberto"
@@ -19,7 +19,16 @@ class RequisicaoBase(BaseModel):
     class Config:
         from_attributes = True
 
-class RequisicaoGet(RequisicaoBase):
+class RequisicaoBaseToGet(BaseModel): 
+    titulo_requisicao: str = Field(..., description = 'definir titulo da requisicao')
+    descricao: str = Field(..., description = 'descricao geral e motivacao de uma requisicao')
+    status: Status = Field(default=Status.ABERTO, description = 'status de uma requisicao')
+    item_requisicao: List[ItemRequisicaoGet] = Field(..., description='items de uma requisicao')
+
+    class Config:
+        from_attributes = True
+
+class RequisicaoGet(RequisicaoBaseToGet):
     pk_id_requisicao: int = Field(..., description = 'identificador unico de uma requisicao')
     data_requisicao: datetime = Field(..., description = 'data de criacao de uma requisicao')
 

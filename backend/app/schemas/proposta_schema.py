@@ -22,7 +22,6 @@ class PropostaGet(PropostaBase):
     descricao_proposta: str = Field(..., description = 'descricao de uma proposta')
     preco_total: float = Field(..., description = 'valor total de cada proposta referente a um item')
     prazo_entrega: datetime = Field(..., description = 'prazo para entrega de bem/servico')
-    escore: float = Field(..., description='nivelamento da proposta com base em criterios pre-definidos')
     item_proposta: List[ItemPropostaGetNested] = Field(..., description='items a que a proposta se refere')
 
 class PropostaGetAll(BaseModel):
@@ -46,8 +45,8 @@ class PropostaGetFornecedor(BaseModel):
         from_attributes = True
     
 class CreateProposta(PropostaBase):
-    id_fornecedor: int = Field(..., description = 'identificador unico do fornecedor que fez a proposta')
-    id_requisicao: int = Field(..., description = 'identificador unico da requisicao a qual a proposta se refere')
+    fk_id_fornecedor: int = Field(..., description = 'identificador unico do fornecedor que fez a proposta')
+    fk_id_requisicao: int = Field(..., description = 'identificador unico da requisicao a qual a proposta se refere')
 
 class PropostaUpdateStatus(BaseModel):
     status_proposta: str = Field(default='Selecionado', description = 'status atual da proposta')

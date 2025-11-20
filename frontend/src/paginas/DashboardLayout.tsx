@@ -1,14 +1,14 @@
 import { useEffect } from "react";
-import {Outlet, useNavigate} from 'react-router-dom'
-import Sidebar from '../components/Sidebar';
+import { Outlet, useNavigate } from "react-router-dom";
+import Sidebar from "../components/Sidebar";
 
 export default function DashboardLayout() {
-    const navigate = useNavigate();
-    const usuarioId = localStorage.getItem('usuarioId');
+  const navigate = useNavigate();
+  const usuarioId = localStorage.getItem("usuarioId");
 
-    useEffect(() => {
+  useEffect(() => {
     if (!usuarioId) {
-      navigate('/');
+      navigate("/");
     }
   }, [usuarioId, navigate]);
 
@@ -17,10 +17,10 @@ export default function DashboardLayout() {
   return (
     <div className="flex h-screen">
       <aside className="w-64 bg-gray-100">
-         <Sidebar /> 
+        <Sidebar />
       </aside>
       <main className="flex-1 p-8 overflow-auto">
-        <Outlet /> 
+        <Outlet />
       </main>
     </div>
   );

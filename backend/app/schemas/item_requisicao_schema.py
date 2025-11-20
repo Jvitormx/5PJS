@@ -10,7 +10,7 @@ class ItemRequisicaoBase(BaseModel):
         from_attributes = True
 
 class ItemRequisicaoGet(ItemRequisicaoBase):
-    pk_id_item_requisicao: int = Field(..., description = 'identificador unico de um item de requisicao')
+    pk_item_requisicao : int = Field(..., description = 'identificador unico de um item de requisicao')
     fk_id_requisicao: int = Field(..., description = 'identificador da requisicao a qual o item pertence')
 
 class UpdateRequisicao(BaseModel):

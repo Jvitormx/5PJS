@@ -10,15 +10,15 @@ from fastapi import HTTPException, Depends
 
 Pesos = Pesos()
 
-def create_proposta(proposta: CreateProposta, db: Session) -> dict:
+def create_proposta(proposta: CreateProposta, db: Session):
 
     nova_proposta = Proposta(
         preco_total = proposta.preco_total,
         prazo_entrega = proposta.prazo_entrega,
         descricao_proposta = proposta.descricao_proposta,
         status_proposta = proposta.status_proposta,
-        fk_id_fornecedor = proposta.id_fornecedor,
-        fk_id_requisicao = proposta.id_requisicao
+        fk_id_fornecedor = proposta.fk_id_fornecedor,
+        fk_id_requisicao = proposta.fk_id_requisicao
     )
 
     db.add(nova_proposta)
@@ -36,14 +36,14 @@ def create_proposta(proposta: CreateProposta, db: Session) -> dict:
     db.commit()
 
     db.refresh(nova_proposta)
-    return {"mensagem":"Proposta criada com sucesso"}
+    return nova_proposta
 
 def calcular_escore(preco_normalizado: float, peso_preco: float, qualidade_fornecedor: float, peso_qualidade: float) -> float:
     escore = (float(preco_normalizado) * float(peso_preco)) + (float(qualidade_fornecedor) * float(peso_qualidade))
     return escore
 
-def retornar_propostas_requisicao(id_requisicao: int, db: Session) -> List[PropostaGetAll]:
-    propostas = db.query(Proposta, Fornecedor).join(Fornecedor).filter(Proposta.fk_id_requisicao == id_requisicao, Proposta.status_proposta=='Pendente').all()
+def retornar_propostas_requisicao(fk_id_requisicao: int, db: Session) -> List[PropostaGetAll]:
+    propostas = db.query(Proposta, Fornecedor).join(Fornecedor).filter(Proposta.fk_id_requisicao == fk_id_requisicao, Proposta.status_proposta=='Pendente').all()
     menor_preco = min(proposta.preco_total for proposta, _ in propostas) if propostas else 0
     propostas_por_escore = []
 
@@ -63,12 +63,12 @@ def retornar_propostas_requisicao(id_requisicao: int, db: Session) -> List[Propo
 
     return propostas_por_escore
 
-def retornar_proposta_fornecedor(id_fornecedor: int, db: Session) -> List[PropostaGetFornecedor]:
+def retornar_proposta_fornecedor(fk_id_fornecedor: int, db: Session) -> List[PropostaGetFornecedor]:
 
     stmt = (
         select(Proposta, Requisicao)
         .join(Requisicao)
-        .where(Proposta.fk_id_fornecedor == id_fornecedor)
+        .where(Proposta.fk_id_fornecedor == fk_id_fornecedor)
     )
 
     propostas_com_requisicoes = db.execute(stmt).all()
@@ -85,7 +85,7 @@ def retornar_proposta_fornecedor(id_fornecedor: int, db: Session) -> List[Propos
 
     return propostas_retorno
 
-def retornar_proposta_items(id_proposta: int, fornecedor_nome: str, escore: float, db: Session) -> PropostaGet:
+def retornar_proposta_items(id_proposta: int, fornecedor_nome: str, db: Session) -> PropostaGet:
     proposta_requisicao = db.query(Proposta, Requisicao).join(Requisicao).options(selectinload(Proposta.item_proposta).selectinload(ItemProposta.item_requisicao))\
     .filter(Proposta.pk_id_proposta == id_proposta).first()
 
@@ -112,7 +112,6 @@ def retornar_proposta_items(id_proposta: int, fornecedor_nome: str, escore: floa
         descricao_proposta = proposta_orm.descricao_proposta,
         preco_total = proposta_orm.preco_total,
         prazo_entrega = proposta_orm.prazo_entrega,
-        escore = escore,
         item_proposta = itens_retorno
     )
 

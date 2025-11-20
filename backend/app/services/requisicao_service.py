@@ -53,6 +53,12 @@ def retornar_requisicoes(id_comprador: int, db: Session) -> List[RequisicaoGetAl
         return None
     return requisicoes
 
+def retornar_requisicoes_fornecedor(db: Session) -> List[RequisicaoGetAll]:
+    requisicoes = db.query(Requisicao).all()
+    if not requisicoes:
+        return None
+    return requisicoes
+
 def retornar_requisicao_items(id: int, db: Session) -> RequisicaoGet:
     requisicao = db.query(Requisicao).filter(Requisicao.pk_id_requisicao == id).first()
     if not requisicao:

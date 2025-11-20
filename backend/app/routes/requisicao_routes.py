@@ -25,10 +25,15 @@ def update_requisicao(requisicao: RequisicaoUpdate, db: Session = Depends(get_db
 def listar_requisicoes(id_comprador: int, db: Session = Depends(get_db)):
     listar_requisicoes = requisicao_service.retornar_requisicoes(id_comprador = id_comprador, db = db)
     return listar_requisicoes
+
+@router.get('/listar_fornecedor', response_model=List[RequisicaoGetAll])
+def listar_requisicoes(db: Session = Depends(get_db)):
+    listar_requisicoes_fornecedor = requisicao_service.retornar_requisicoes_fornecedor(db = db)
+    return listar_requisicoes_fornecedor
     
 @router.get('/requisicao/{id_requisicao}', response_model=RequisicaoGet)
-def listar_requisicao_items(id = id, db: Session = Depends(get_db)):
-    listar_requisicao = requisicao_service.retornar_requisicao_items(id = id, db = db)
+def listar_requisicao_items(id_requisicao: int, db: Session = Depends(get_db)):
+    listar_requisicao = requisicao_service.retornar_requisicao_items(id = id_requisicao, db = db)
     return listar_requisicao
 
 @router.get('/listar-requisicoes-gerente', response_model=List[RequisicaoGetAll])
