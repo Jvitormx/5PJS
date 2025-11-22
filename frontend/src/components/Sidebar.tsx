@@ -75,25 +75,45 @@ export default function Sidebar() {
           )}
 
           {usuarioTipo === "fornecedor" && (
-            <li>
-              <Link
-                to="/portal/pedidos_fornecedor"
-                className="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700"
-              >
-                Lista de Pedidos de Aquisição (PAs)
-              </Link>
-            </li>
+            <>
+              <li>
+                <Link
+                  to="/portal/pedidos_fornecedor"
+                  className="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700"
+                >
+                  Lista de Pedidos de Aquisição (PAs)
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/portal/pedidos_compra_fornecedor"
+                  className="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700"
+                >
+                  Lista de Pedidos de Compra (POs)
+                </Link>
+              </li>
+            </>
           )}
 
           {usuarioTipo === "gerente" && (
-            <li>
-              <Link
-                to="/portal/pedidos_gerente"
-                className="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700"
-              >
-                Lista de PAs com propostas confirmadas
-              </Link>
-            </li>
+            <>
+              <li>
+                <Link
+                  to="/portal/pedidos_gerente"
+                  className="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700"
+                >
+                  Lista de PAs com propostas confirmadas
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/portal/pedido_compra_gerente"
+                  className="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700"
+                >
+                  Lista de Pedidos de Compra (POs)_
+                </Link>
+              </li>
+            </>
           )}
 
           <li>

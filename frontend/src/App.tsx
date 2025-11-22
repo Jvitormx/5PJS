@@ -10,6 +10,10 @@ import CriarPropostaPage from "./paginas/CriarProposta";
 import PedidoListaGerente from "./paginas/PedidoListaGerente";
 import PedidoFormGerente from "./paginas/PedidoFormGerente";
 import PedidoAssinatura from "./paginas/PedidoAssinatura";
+import PedidoCompraLista from "./paginas/PedidoCompraLista";
+import PedidoCompraListaFornecedor from "./paginas/PedidoCompraFornecedor";
+import PedidoCompraDetalhe from "./paginas/PedidoCompraDetalhe";
+import PedidoCompraDetalheFornecedor from "./paginas/PedidoCompraDetalheFornecedor";
 
 import "./App.css";
 
@@ -44,6 +48,23 @@ function App() {
         <Route
           path="pedidos_gerente/:id_requisicao/assinatura/:id_proposta"
           element={<PedidoAssinatura />}
+        />
+
+        <Route path="pedido_compra_gerente" element={<PedidoCompraLista />} />
+
+        <Route
+          path="pedido_compra_gerente/:id"
+          element={<PedidoCompraDetalhe />}
+        />
+
+        <Route
+          path="pedidos_compra_fornecedor"
+          element={<PedidoCompraListaFornecedor />}
+        />
+
+        <Route
+          path="pedidos_compra_fornecedor/:id"
+          element={<PedidoCompraDetalheFornecedor />}
         />
 
         <Route

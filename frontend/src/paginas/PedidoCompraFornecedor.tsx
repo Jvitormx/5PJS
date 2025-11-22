@@ -17,10 +17,14 @@ function Lista() {
   const [pedidosCompra, setPedidos] = useState<PedidoCompra[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const fornecedorId = localStorage.getItem("usuarioId");
+
   useEffect(() => {
     const fetchPedidos = async () => {
       try {
-        const response = await api.get("/pedido_compra/pedido_compra_gerente");
+        const response = await api.get(
+          `/pedido_compra_fornecedor/${fornecedorId}`
+        );
         setPedidos(response.data);
       } catch (error) {
         console.error("Erro ao buscar pedidos compra", error);
@@ -74,7 +78,7 @@ function Lista() {
   );
 }
 
-export default function PedidoCompraLista() {
+export default function PedidoCompraListaFornecedor() {
   return (
     <>
       <Lista />

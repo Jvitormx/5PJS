@@ -55,16 +55,48 @@ def create_pedido_compra(pedido_compra: CreatePedidoCompra, id_gerente: int, id_
     return template
 
 def retornar_pedido_compra_fornecedor(id_fornecedor: int, db: Session) -> List[PedidoCompraGet]:
-    pedido_compra = db.query(PedidoCompra).join(Proposta).join(Fornecedor).filter(Proposta.fk_id_fornecedor == id_fornecedor).all()
-    if not pedido_compra:
-        return None
-    return pedido_compra
+    stmt = (
+        select(
+            PedidoCompra.pk_id_pedido_compra,
+            PedidoCompra.status,
+            PedidoCompra.data_assinatura,
+            PedidoCompra.info,
+            PedidoCompra.esign_id,
+            Requisicao.titulo_requisicao,
+            Fornecedor.razao_social,
+            Proposta.preco_total
+        )
+        .join(Proposta, PedidoCompra.fk_id_proposta == Proposta.pk_id_proposta)
+        .join(Requisicao, Proposta.fk_id_requisicao == Requisicao.pk_id_requisicao)
+        .join(Fornecedor, Proposta.fk_id_fornecedor == Fornecedor.pk_usuario_id)
+    ).where(Fornecedor.pk_usuario_id == id_fornecedor)
+
+
+    results = db.execute(stmt).all()
+
+    return results
 
 def retornar_pedido_compra_gerente(db: Session) -> List[PedidoCompraGet]:
-    pedido_compra = db.query(PedidoCompra).all()
-    if not pedido_compra:
-        return None
-    return pedido_compra
+    stmt = (
+        select(
+            PedidoCompra.pk_id_pedido_compra,
+            PedidoCompra.status,
+            PedidoCompra.data_assinatura,
+            PedidoCompra.info,
+            PedidoCompra.esign_id,
+            Requisicao.titulo_requisicao,
+            Fornecedor.razao_social,
+            Proposta.preco_total
+        )
+        .join(Proposta, PedidoCompra.fk_id_proposta == Proposta.pk_id_proposta)
+        .join(Requisicao, Proposta.fk_id_requisicao == Requisicao.pk_id_requisicao)
+        .join(Fornecedor, Proposta.fk_id_fornecedor == Fornecedor.pk_usuario_id)
+    )
+
+
+    results = db.execute(stmt).all()
+
+    return results
 
 def finalizar_pedido_compra(pedido_compra: PedidoCompraFinalizar, db: Session) -> dict:
     

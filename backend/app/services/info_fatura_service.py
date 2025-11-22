@@ -32,3 +32,25 @@ def get_info_fatura(pk_id_pedido_compra: int, db: Session) -> InfoFaturaGet:
         raise HTTPException(status_code=404, detail="Informação da fatura não encontrada.")
 
     return info_fatura_db
+
+def update_info_fatura_status(pk_id_info_fatura: int, db: Session) -> dict:
+    
+    statement = (
+        select(InfoFatura, PedidoCompra)
+        .join(PedidoCompra, InfoFatura.fk_id_pedido_compra == PedidoCompra.pk_id_pedido_compra)
+        .where(InfoFatura.pk_id_fatura == pk_id_info_fatura)
+    )
+
+    info_fatura_db = db.execute(statement).first()
+
+    if not info_fatura_db:
+        raise HTTPException(status_code=404, detail="Informação da fatura não encontrada.")
+
+    fatura, pedido_compra = info_fatura_db
+
+    fatura.status = "Aprovada"
+    pedido_compra.status = "Finalizado"
+
+    db.commit()
+
+    return {"mensagem": "processo finalizado"}
