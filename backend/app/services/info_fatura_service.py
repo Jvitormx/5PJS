@@ -1,5 +1,5 @@
 from app.schemas.info_fatura_schema import CreateInfoFatura, InfoFaturaGet
-from app.models import InfoFatura, PedidoCompra 
+from app.models import InfoFatura, PedidoCompra
 from typing import List
 from sqlalchemy.orm import Session
 from fastapi import HTTPException, Depends
@@ -24,7 +24,7 @@ def create_info_fatura(info_fatura: CreateInfoFatura, db: Session) -> dict:
 
 
 def get_info_fatura(pk_id_pedido_compra: int, db: Session) -> InfoFaturaGet:
-    
+
     statemant = (select(InfoFatura).where(InfoFatura.fk_id_pedido_compra == pk_id_pedido_compra))
     info_fatura_db = db.execute(statemant).scalar_one_or_none()
 
@@ -34,7 +34,7 @@ def get_info_fatura(pk_id_pedido_compra: int, db: Session) -> InfoFaturaGet:
     return info_fatura_db
 
 def update_info_fatura_status(pk_id_info_fatura: int, db: Session) -> dict:
-    
+
     statement = (
         select(InfoFatura, PedidoCompra)
         .join(PedidoCompra, InfoFatura.fk_id_pedido_compra == PedidoCompra.pk_id_pedido_compra)

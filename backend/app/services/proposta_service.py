@@ -63,12 +63,12 @@ def retornar_propostas_requisicao(fk_id_requisicao: int, db: Session) -> List[Pr
 
     return propostas_por_escore
 
-def retornar_proposta_fornecedor(fk_id_fornecedor: int, db: Session) -> List[PropostaGetFornecedor]:
+def retornar_proposta_fornecedor(id_fornecedor: int, db: Session) -> List[PropostaGetFornecedor]:
 
     stmt = (
         select(Proposta, Requisicao)
         .join(Requisicao)
-        .where(Proposta.fk_id_fornecedor == fk_id_fornecedor)
+        .where(Proposta.fk_id_fornecedor == id_fornecedor)
     )
 
     propostas_com_requisicoes = db.execute(stmt).all()
@@ -76,8 +76,8 @@ def retornar_proposta_fornecedor(fk_id_fornecedor: int, db: Session) -> List[Pro
     propostas_retorno = []
     for proposta, requisicao in propostas_com_requisicoes:
         proposta_dados = PropostaGetFornecedor(
-            id_proposta = proposta.pk_id_proposta,
-            requisicao_titulo = requisicao.titulo_requisicao,
+            pk_id_proposta = proposta.pk_id_proposta,
+            titulo_requisicao = requisicao.titulo_requisicao,
             preco_total = proposta.preco_total,
             status_proposta = proposta.status_proposta
         )
@@ -121,7 +121,7 @@ def update_proposta(proposta: PropostaUpdate, id: int, db: Session) -> PropostaU
     proposta_update = db.query(Proposta).filter(Proposta.pk_id_proposta == id).first()
     if not proposta_update:
         return None
-    
+
     proposta_update.update(proposta.model_dump(), synchronize_session=False)
 
     db.commit()
@@ -132,9 +132,27 @@ def alterar_proposta_status(proposta: PropostaUpdateStatus, id_proposta: int, db
     proposta_update_status = db.query(Proposta).filter(Proposta.pk_id_proposta == id_proposta).first()
     if not proposta:
         return None
-    
+
     proposta_update_status.status_proposta = proposta.status_proposta
 
     db.commit()
 
     return proposta
+
+def rejeitar_proposta(status: str, id_proposta: int, db: Session) -> dict:
+    proposta_update_status = db.query(Proposta).filter(Proposta.pk_id_proposta == id_proposta).first()
+
+    proposta_update_status.status_proposta = status
+
+    db.commit()
+
+    return {"mensagem":"proposta rejeitada"}
+
+def fechar_proposta(status: str, id_proposta: int, db: Session) -> dict:
+    proposta_update_status = db.query(Proposta).filter(Proposta.pk_id_proposta == id_proposta).first()
+
+    proposta_update_status.status_proposta = status
+
+    db.commit()
+
+    return {"mensagem":"proposta retirada"}

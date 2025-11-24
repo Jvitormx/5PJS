@@ -5,13 +5,13 @@ from enum import StrEnum
 from app.schemas.item_proposta_schema import ItemPropostaBase, ItemPropostaGetNested
 
 
-class PropostaBase(BaseModel): 
+class PropostaBase(BaseModel):
     descricao_proposta: str = Field(..., description = 'descricao de uma proposta')
     preco_total: float = Field(..., description = 'valor total de cada proposta referente a um item')
     prazo_entrega: datetime = Field(..., description = 'prazo para entrega de bem/servico')
     status_proposta: str = Field(default='Pendente', description = 'status atual da proposta')
     item_proposta: List[ItemPropostaBase] = Field(..., description='items a que a proposta se refere')
-    
+
     class Config:
         from_attributes = True
 
@@ -36,14 +36,14 @@ class PropostaGetAll(BaseModel):
         from_attributes = True
 
 class PropostaGetFornecedor(BaseModel):
-    id_proposta: int = Field(..., description = 'identificador unico de uma requisicao')
-    requisicao_titulo: str = Field(..., description = 'titulo da requisicao a qual a proposta se refere')
+    pk_id_proposta: int = Field(..., description = 'identificador unico de uma requisicao')
+    titulo_requisicao: str = Field(..., description = 'titulo da requisicao a qual a proposta se refere')
     preco_total: float = Field(..., description = 'valor total de cada proposta referente a um item')
     status_proposta: str = Field(..., description = 'status atual da proposta')
 
     class Config:
         from_attributes = True
-    
+
 class CreateProposta(PropostaBase):
     fk_id_fornecedor: int = Field(..., description = 'identificador unico do fornecedor que fez a proposta')
     fk_id_requisicao: int = Field(..., description = 'identificador unico da requisicao a qual a proposta se refere')

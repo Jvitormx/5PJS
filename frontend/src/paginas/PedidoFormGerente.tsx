@@ -39,6 +39,32 @@ function ItensDescricao({ pedidoDetalhe }: { pedidoDetalhe: Pedido }) {
 }
 
 function PropostaDescricao({ pedidoDetalhe }: { pedidoDetalhe: Pedido }) {
+  const [loading, setLoading] = useState(false);
+
+  const rejeitarProposta = async () => {
+    const confirmacao = confirm(
+      "Tem certeza que deseja rejeitar esta proposta?"
+    );
+    if (!confirmacao) return;
+
+    try {
+      setLoading(true);
+
+      await api.put(
+        `/propostas/rejeitar/${pedidoDetalhe.pk_id_proposta}?status=Rejeitada`
+      );
+
+      alert("Proposta rejeitada com sucesso!");
+
+      window.location.reload();
+    } catch (error) {
+      console.error("Erro ao rejeitar proposta:", error);
+      alert("Erro ao rejeitar proposta.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="mb-5 p-4 border border-base-300 rounded-xl bg-base-100 shadow-sm">
       <h3 className="text-lg font-bold mb-2">Proposta Selecionada</h3>
@@ -50,14 +76,22 @@ function PropostaDescricao({ pedidoDetalhe }: { pedidoDetalhe: Pedido }) {
           {new Date(pedidoDetalhe.prazo_entrega).toLocaleDateString()}
         </li>
 
-        <li>
+        <li className="flex gap-3">
           <Link
             to={`assinatura/${pedidoDetalhe.pk_id_proposta}`}
             state={{ nome_fornecedor: pedidoDetalhe.fornecedor_nome }}
-            className="btn"
+            className="btn btn-primary"
           >
             Continuar
           </Link>
+
+          <button
+            onClick={rejeitarProposta}
+            className="btn btn-error"
+            disabled={loading}
+          >
+            {loading ? "Rejeitando..." : "Rejeitar Proposta"}
+          </button>
         </li>
       </ul>
     </div>

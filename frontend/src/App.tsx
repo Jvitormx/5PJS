@@ -14,6 +14,10 @@ import PedidoCompraLista from "./paginas/PedidoCompraLista";
 import PedidoCompraListaFornecedor from "./paginas/PedidoCompraFornecedor";
 import PedidoCompraDetalhe from "./paginas/PedidoCompraDetalhe";
 import PedidoCompraDetalheFornecedor from "./paginas/PedidoCompraDetalheFornecedor";
+import FornecedorLista from "./paginas/FornecedorLista";
+import FornecedorNota from "./paginas/FornecedorNota";
+import ListaPropostas from "./paginas/ListaPropostas";
+import PropostaDetalhe from "./paginas/PropostaDetalhe";
 
 import "./App.css";
 
@@ -29,6 +33,10 @@ function App() {
 
         <Route path="pedidos/:id" element={<PedidoDetalhes />} />
 
+        <Route path="fornecedores" element={<FornecedorLista />} />
+
+        <Route path="fornecedores/:id" element={<FornecedorNota />} />
+
         <Route path="pedidos_fornecedor" element={<PedidoLista />} />
 
         <Route
@@ -40,6 +48,10 @@ function App() {
           path="pedidos_fornecedor/:id/criar_proposta"
           element={<CriarPropostaPage />}
         />
+
+        <Route path="propostas_fornecedor" element={<ListaPropostas />} />
+
+        <Route path="propostas_fornecedor/:id" element={<PropostaDetalhe />} />
 
         <Route path="pedidos_gerente" element={<PedidoListaGerente />} />
 

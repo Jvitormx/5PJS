@@ -22,10 +22,14 @@ def retornar_pedido_compra_fornecedor(id_fornecedor: int, db: Session = Depends(
     return novo_pedido_compra
 
 @router.get('/pedido_compra_gerente', response_model=PedidoCompraGet)
-def retornar_pedido_compra_fornecedor(db: Session = Depends(get_db)):
+def retornar_pedido_compra_gerente(db: Session = Depends(get_db)):
     novo_pedido_compra = pedido_compra_service.retornar_pedido_compra_fornecedor(db = db)
     return novo_pedido_compra
 
-@router.post('/webhook', status_code=status.HTTP_200_OK, response_model=WebhookPayload)
-def receber_webhook_pedido_compra(payload: WebhookPayload, db: Session = Depends(get_db)):
-    pedido_compra_service.atualizar_pedido_compra(payload = payload, db = db)
+
+@router.put('/cancelar/{id_pedido_compra}')
+def pedido_compra_cancelar(status: str, id_pedido_compra: int, db: Session = Depends(get_db)):
+    pedido_compra_atualizado = pedido_compra_service.cancelar_pedido_compra(status = status, id_pedido_compra = id_pedido_compra, db = db)
+    if not pedido_compra_atualizado:
+        return None
+    return pedido_compra_atualizado

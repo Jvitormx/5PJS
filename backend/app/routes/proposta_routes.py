@@ -42,3 +42,20 @@ def update_proposta(proposta: PropostaUpdate, id_proposta: int, db: Session = De
     if not proposta_atualizada:
         return None
     return proposta_atualizada
+
+@router.put('/rejeitar/{id_proposta}')
+def update_proposta(status: str, id_proposta: int, db: Session = Depends(get_db)):
+    proposta_atualizada = proposta_service.rejeitar_proposta(status = status, id_proposta = id_proposta, db = db)
+    if not proposta_atualizada:
+        return None
+    return proposta_atualizada
+
+@router.put('/retirar/{id_proposta}')
+def update_proposta(status: str, id_proposta: int, db: Session = Depends(get_db)):
+    proposta_atualizada = proposta_service.fechar_proposta(status = status, id_proposta = id_proposta, db = db)
+    if not proposta_atualizada:
+        return None
+    return proposta_atualizada
+
+
+

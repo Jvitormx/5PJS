@@ -44,7 +44,6 @@ function ItensDescricao({ pedidoDetalhe }: { pedidoDetalhe: Pedido }) {
 
 function Propostas({ propostaSelecionar }: { propostaSelecionar: Proposta[] }) {
   const navigate = useNavigate();
-
   const [selectedPropostaId, setSelectedPropostaId] = useState<number | null>(
     null
   );
@@ -131,6 +130,8 @@ function Propostas({ propostaSelecionar }: { propostaSelecionar: Proposta[] }) {
 
 export default function PedidoDetalhes() {
   const { id: requisicao_id } = useParams() as { id: string };
+  const navigate = useNavigate();
+
   const [pedido, setPedido] = useState<Pedido | undefined>(undefined);
   const [propostas, setPropostas] = useState<Proposta[]>([]);
 
@@ -163,6 +164,22 @@ export default function PedidoDetalhes() {
     }
   }, [requisicao_id]);
 
+  const fecharRequisicao = async () => {
+    if (!pedido) return;
+
+    try {
+      await api.put(`/requisicoes/fechar/${pedido.pk_id_requisicao}`, {
+        status: "Fechada",
+      });
+
+      alert("Requisição fechada com sucesso!");
+      navigate("/portal/pedidos");
+    } catch (error) {
+      console.error("Erro ao fechar requisição:", error);
+      alert("Falha ao fechar requisição.");
+    }
+  };
+
   if (!pedido) {
     return <p className="p-6 text-center">Carregando detalhes do pedido...</p>;
   }
@@ -180,10 +197,16 @@ export default function PedidoDetalhes() {
           {pedido.status} | {pedido.data_requisicao}
         </p>
         <p className="mt-2 text-sm">{pedido.descricao}</p>
+
+        <button
+          onClick={fecharRequisicao}
+          className="btn btn-error btn-outline mt-4 w-full"
+        >
+          Fechar Requisição
+        </button>
       </div>
 
       <ItensDescricao pedidoDetalhe={pedido} />
-
       <Propostas propostaSelecionar={propostas} />
     </div>
   );

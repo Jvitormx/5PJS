@@ -30,7 +30,7 @@ def listar_requisicoes(id_comprador: int, db: Session = Depends(get_db)):
 def listar_requisicoes(db: Session = Depends(get_db)):
     listar_requisicoes_fornecedor = requisicao_service.retornar_requisicoes_fornecedor(db = db)
     return listar_requisicoes_fornecedor
-    
+
 @router.get('/requisicao/{id_requisicao}', response_model=RequisicaoGet)
 def listar_requisicao_items(id_requisicao: int, db: Session = Depends(get_db)):
     listar_requisicao = requisicao_service.retornar_requisicao_items(id = id_requisicao, db = db)
@@ -45,4 +45,10 @@ def listar_requisicoes(db: Session = Depends(get_db)):
 def listar_requisicao_gerente(id_requisicao: int, db: Session = Depends(get_db)):
     listar_requisicao = requisicao_service.retornar_requisicao_gerente(id_requisicao = id_requisicao, db = db)
     return listar_requisicao
-             
+
+@router.put('/fechar/{id_requisicao}')
+def update_proposta(status: str, id_requisicao: int, db: Session = Depends(get_db)):
+    requisicao_atualizada = requisicao_service.fechar_requisicao(status = status, id_requisicao = id_requisicao, db = db)
+    if not requisicao_atualizada:
+        return None
+    return requisicao_atualizada

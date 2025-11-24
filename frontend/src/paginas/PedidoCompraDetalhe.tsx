@@ -16,6 +16,7 @@ export default function PedidoCompraDetalhe() {
 
   const [fatura, setFatura] = useState<Fatura | undefined>(undefined);
   const [loading, setLoading] = useState(false);
+  const [cancelLoading, setCancelLoading] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -34,12 +35,13 @@ export default function PedidoCompraDetalhe() {
 
   const confirmarFatura = async () => {
     if (!fatura) return;
-
     setLoading(true);
+
     try {
       await api.put(`/fatura_update/${fatura.pk_id_fatura}`, {
         status: "Confirmado",
       });
+
       alert("Fatura confirmada com sucesso.");
       navigate("/portal/pedidos");
     } catch (error) {
@@ -50,21 +52,26 @@ export default function PedidoCompraDetalhe() {
     }
   };
 
-  const recusarFatura = async () => {
-    if (!fatura) return;
+  const cancelarPedidoCompra = async () => {
+    if (!pedido_compra_id) return;
 
-    setLoading(true);
+    const confirmar = confirm("Tem certeza que deseja CANCELAR este pedido?");
+    if (!confirmar) return;
+
+    setCancelLoading(true);
+
     try {
-      await api.put(`/fatura_update/${fatura.pk_id_fatura}`, {
-        status: "Recusado",
-      });
-      alert("Fatura marcada como recusada.");
+      await api.put(
+        `/pedido_compra/cancelar/${pedido_compra_id}?status=Cancelado`
+      );
+
+      alert("Pedido de compra cancelado com sucesso.");
       navigate("/portal/pedidos");
     } catch (error) {
-      console.error("Erro ao recusar fatura:", error);
-      alert("Falha ao recusar a fatura.");
+      console.error("Erro ao cancelar pedido de compra:", error);
+      alert("Falha ao cancelar o pedido.");
     } finally {
-      setLoading(false);
+      setCancelLoading(false);
     }
   };
 
@@ -111,15 +118,15 @@ export default function PedidoCompraDetalhe() {
           >
             {loading ? "Processando..." : "Confirmar Pagamento"}
           </button>
-
-          <button
-            className="btn btn-error w-full"
-            onClick={recusarFatura}
-            disabled={loading}
-          >
-            {loading ? "Aguarde..." : "Recusar"}
-          </button>
         </div>
+
+        <button
+          className="btn btn-warning w-full mt-4"
+          onClick={cancelarPedidoCompra}
+          disabled={cancelLoading}
+        >
+          {cancelLoading ? "Cancelando..." : "Cancelar Pedido de Compra"}
+        </button>
       </div>
     </div>
   );

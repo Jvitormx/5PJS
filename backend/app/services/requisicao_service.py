@@ -34,7 +34,7 @@ def update_requisicao(requisicao: RequisicaoUpdate, db: Session) -> RequisicaoUp
     requisicao_update = db.query(Requisicao).filter(Requisicao.pk_id_requisicao == requisicao.pk_id_requisicao).first()
     if not requisicao_update:
         return None
-    
+
     requisicao_update.update(requisicao.model_dump(), synchronize_session=False)
 
     db.commit()
@@ -69,10 +69,10 @@ def retornar_requisicao_gerente(id_requisicao: int, db: Session) -> RequisicaoGe
 
     proposta_requisicao = (
         db.query(Proposta, Requisicao, Fornecedor)
-        .join(Requisicao, Proposta.fk_id_requisicao == Requisicao.pk_id_requisicao) 
-        .join(Fornecedor, Proposta.fk_id_fornecedor == Fornecedor.pk_usuario_id) 
+        .join(Requisicao, Proposta.fk_id_requisicao == Requisicao.pk_id_requisicao)
+        .join(Fornecedor, Proposta.fk_id_fornecedor == Fornecedor.pk_usuario_id)
         .filter(
-            Requisicao.pk_id_requisicao == id_requisicao, 
+            Requisicao.pk_id_requisicao == id_requisicao,
             Proposta.status_proposta == 'Selecionado'
         )
         .first()
@@ -95,7 +95,7 @@ def retornar_requisicao_gerente(id_requisicao: int, db: Session) -> RequisicaoGe
         )
 
         return requisicao_retorno
-    
+
     return None
 
 def returnar_requisicao_itens_selecionados(id_itens: List[int], db: Session) -> List[ItemRequisicao]:
@@ -103,3 +103,23 @@ def returnar_requisicao_itens_selecionados(id_itens: List[int], db: Session) -> 
     if not itens:
         return None
     return itens
+
+def fechar_requisicao(status: str, id_requisicao: int, db: Session) -> dict:
+    requisicao = db.query(Requisicao).filter(Requisicao.pk_id_requisicao == id_requisicao).first()
+
+    if not requisicao:
+        raise HTTPException(status_code=404, detail="Requisicao not found")
+
+    propostas = db.query(Proposta).filter(Proposta.fk_id_requisicao == id_requisicao).all()
+
+    requisicao.status = status
+
+    if propostas:
+        for proposta in propostas:
+            proposta.status_proposta = 'Pendente'
+    else:
+        pass
+
+    db.commit()
+
+    return {"mensagem": "Requisicao atualizada e propostas setadas como pendente"}

@@ -9,17 +9,24 @@ from datetime import datetime
 from app.services.docuseal_assinatura_service import criar_template_assinatura
 
 def create_pedido_compra(pedido_compra: CreatePedidoCompra, id_gerente: int, id_proposta: int, db: Session) -> dict:
-    
+
     id_gerente = pedido_compra.fk_id_gerente
     id_proposta = pedido_compra.fk_id_proposta
 
     statemant = (select(Proposta, Requisicao, Fornecedor).join(Requisicao, Proposta.fk_id_requisicao == Requisicao.pk_id_requisicao).
                  join(Fornecedor, Fornecedor.pk_usuario_id == Proposta.fk_id_fornecedor).where(Proposta.pk_id_proposta == id_proposta))
-    
+
     proposta, requisicao, fornecedor = db.execute(statemant).first()
 
-    statemant = (select(Usuario).where(Usuario.pk_usuario_id == id_gerente))
-    gerente = db.execute(statemant).first()
+    statemantUsuario = (select(Usuario).where(Usuario.pk_usuario_id == id_gerente))
+    gerente = db.execute(statemantUsuario).first()
+
+    statemantProposta = (select(Proposta, Requisicao).join(Requisicao).where(Proposta.pk_id_proposta == id_proposta))
+    proposta_requisicao = db.execute(statemantProposta).unique().one()
+    proposta, requisicao = proposta_requisicao
+
+    proposta.status_proposta = "Aprovada"
+    requisicao.status = "Finalizada"
 
     data_assin = datetime.now().strftime("%d/%m/%Y")
     prazo_entrega = proposta.prazo_entrega.strftime("%d/%m/%Y")
@@ -38,7 +45,7 @@ def create_pedido_compra(pedido_compra: CreatePedidoCompra, id_gerente: int, id_
         n_proposta = n_proposta,
         n_requisicao = n_requisicao
     )
-    
+
     novo_pedido_compra = PedidoCompra(
         status = pedido_compra.status,
         data_assinatura = pedido_compra.data_assinatura,
@@ -98,29 +105,11 @@ def retornar_pedido_compra_gerente(db: Session) -> List[PedidoCompraGet]:
 
     return results
 
-def finalizar_pedido_compra(pedido_compra: PedidoCompraFinalizar, db: Session) -> dict:
-    
-    statemant = (select(PedidoCompra).where(PedidoCompra.fk_id_proposta == pedido_compra.pk_id_pedido_compra))
-    pedido_compra_db = db.execute(statemant).scalar_one_or_none()
+def cancelar_pedido_compra(status: str, id_pedido_compra: int, db: Session) -> dict:
+    pedido_compra_update_status = db.query(PedidoCompra).filter(PedidoCompra.pk_id_pedido_compra == id_pedido_compra).first()
 
-    if not pedido_compra_db:
-        raise HTTPException(status_code=404, detail="Pedido de compra não encontrado.")
-
-    pedido_compra_db.status = pedido_compra.status
+    pedido_compra_update_status.status = status
 
     db.commit()
-    db.refresh(pedido_compra_db)
 
-    return {"mensagem": "Pedido de compra finalizado com sucesso."}
-
-def atualizar_pedido_compra(payload: WebhookPayload, db: Session) -> dict:
-    statement = (select(PedidoCompra).where(PedidoCompra.esign_id == payload.data.submission.id))
-    pedido_compra_db = db.execute(statement).scalar_one_or_none()
-
-    if not pedido_compra_db:
-        raise HTTPException(status_code=404, detail="Pedido de compra não encontrado.")
-
-    pedido_compra_db.status = 'Em andamento'
-
-    db.commit()
-    db.refresh(pedido_compra_db)
+    return {"mensagem":"proposta retirada"}
