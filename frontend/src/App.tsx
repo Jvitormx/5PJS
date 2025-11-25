@@ -18,6 +18,8 @@ import FornecedorLista from "./paginas/FornecedorLista";
 import FornecedorNota from "./paginas/FornecedorNota";
 import ListaPropostas from "./paginas/ListaPropostas";
 import PropostaDetalhe from "./paginas/PropostaDetalhe";
+import CadastroInterno from "./paginas/CadastroInterno";
+import CadastroExterno from "./paginas/CadastroExterno";
 
 import "./App.css";
 
@@ -25,6 +27,10 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<Login />} />
+
+      <Route path="/cadastro-interno" element={<CadastroInterno />} />
+
+      <Route path="/cadastro-externo" element={<CadastroExterno />} />
 
       <Route path="/portal" element={<DashboardLayout />}>
         <Route path="pedidos" element={<PedidoList />} />

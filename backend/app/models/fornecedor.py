@@ -15,7 +15,7 @@ class Fornecedor(Usuario):
     pk_usuario_id: Mapped[int] = mapped_column(Integer, primary_key=True)
     cnpj: Mapped[str] = mapped_column(String(255), nullable=False)
     razao_social: Mapped[str] = mapped_column(String(255), nullable=False)
-    nota_qualidade: Mapped[float] = mapped_column(Float, nullable=True)
+    nota_qualidade: Mapped[float] = mapped_column(Float, nullable=False)
     descricao: Mapped[Optional[str]] = mapped_column(Text)
 
     __mapper_args__ = {

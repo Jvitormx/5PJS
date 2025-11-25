@@ -20,7 +20,7 @@ function Lista() {
   useEffect(() => {
     const fetchPedidos = async () => {
       try {
-        const response = await api.get("/fornecedores/listar-fornecedores/");
+        const response = await api.get("/fornecedores/listar-fornecedores");
         setFornecedores(response.data);
       } catch (error) {
         console.error("Erro ao buscar fornecedores", error);

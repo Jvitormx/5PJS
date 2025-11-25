@@ -1,5 +1,5 @@
 from app.schemas.fornecedor_schema import FornecedorGet, CreateFornecedor, UpdateFornecedor, Fornecedor_Atribuir_Nota
-from app.models import Fornecedor
+from app.models import Fornecedor, Usuario
 from typing import List
 from app.core.hashing import Hash
 from sqlalchemy.orm import Session
@@ -14,6 +14,7 @@ def create_fornecedor(fornecedor: CreateFornecedor, db: Session) -> FornecedorGe
         tipo = fornecedor.tipo,
         cnpj = fornecedor.cnpj,
         razao_social = fornecedor.razao_social,
+        nota_qualidade = fornecedor.nota_qualidade,
         descricao = fornecedor.descricao
     )
 
@@ -39,12 +40,12 @@ def update_fornecedor(fornecedor: UpdateFornecedor, id: int, db: Session) -> Upd
 
     return usuario_update.first()
 
-def atrubuir_nota_fornecedor(fornecedor: Fornecedor_Atribuir_Nota, id: int, db: Session) -> FornecedorGet:
-    fornecedor_nova_nota = db.query(Fornecedor).filter(Fornecedor.pk_usuario_id == id).first()
+def atrubuir_nota_fornecedor(fornecedor: Fornecedor_Atribuir_Nota, id_fornecedor: int, db: Session) -> FornecedorGet:
+    fornecedor_nova_nota = db.query(Fornecedor).filter(Fornecedor.pk_usuario_id == id_fornecedor).first()
 
     if not fornecedor_nova_nota:
         return None
-    
+
     fornecedor_nova_nota.nota_qualidade = fornecedor.nota_qualidade
 
     db.commit()
@@ -53,7 +54,5 @@ def atrubuir_nota_fornecedor(fornecedor: Fornecedor_Atribuir_Nota, id: int, db: 
     return fornecedor_nova_nota
 
 def retornar_fornecedores(db: Session) -> List[FornecedorGet]:
-    usuarios = db.query(Fornecedor).all()
-    if not usuarios:
-        return None
+    usuarios = db.query(Usuario).join(Fornecedor).all()
     return usuarios

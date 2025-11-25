@@ -22,14 +22,13 @@ def update_fornecedor(fornecedor: UpdateFornecedor, id: int, db: Session = Depen
     return usuario_atualizado
 
 @router.put('/atribuir_nota/{id_fornecedor}', response_model=FornecedorGet)
-def atribuir_nota(fornecedor: Fornecedor_Atribuir_Nota, id: int, db: Session = Depends(get_db)):
-    usuario_atualizado = fornecedor_service.atrubuir_nota_fornecedor(fornecedor = fornecedor, id = id, db = db)
+def atribuir_nota(fornecedor: Fornecedor_Atribuir_Nota, id_fornecedor: int, db: Session = Depends(get_db)):
+    usuario_atualizado = fornecedor_service.atrubuir_nota_fornecedor(fornecedor = fornecedor, id_fornecedor = id_fornecedor, db = db)
     if not usuario_atualizado:
         return None
     return usuario_atualizado
 
-@router.get('/listar-fornecedores/', response_model=List[FornecedorGet])
+@router.get('/listar-fornecedores', response_model=List[FornecedorGet])
 def listar_usuarios(db: Session = Depends(get_db)):
     lista_usuarios = fornecedor_service.retornar_fornecedores(db = db)
     return lista_usuarios
-             
