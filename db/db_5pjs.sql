@@ -9,7 +9,7 @@ CREATE TABLE fornecedor (
     pk_usuario_id INT PRIMARY KEY REFERENCES usuario(pk_usuario_id),
     cnpj VARCHAR(255) NOT NULL,
     razao_social VARCHAR(255) NOT NULL,
-    nota_qualidade FLOAT NULL,
+    nota_qualidade FLOAT NOT NULL,
     descricao TEXT 
 );
 
