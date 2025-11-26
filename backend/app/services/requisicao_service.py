@@ -48,13 +48,13 @@ def retornar_requisicoes_gerente(db: Session) -> List[RequisicaoGetAll]:
     return requisicoes
 
 def retornar_requisicoes(id_comprador: int, db: Session) -> List[RequisicaoGetAll]:
-    requisicoes = db.query(Requisicao).filter(Requisicao.fk_id_comprador == id_comprador).all()
+    requisicoes = db.query(Requisicao).filter(Requisicao.fk_id_comprador == id_comprador, Requisicao.status == 'aberto').all()
     if not requisicoes:
         return None
     return requisicoes
 
 def retornar_requisicoes_fornecedor(db: Session) -> List[RequisicaoGetAll]:
-    requisicoes = db.query(Requisicao).all()
+    requisicoes = db.query(Requisicao).filter(Requisicao.status == 'aberto').all()
     if not requisicoes:
         return None
     return requisicoes
