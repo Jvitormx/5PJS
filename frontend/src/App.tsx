@@ -81,7 +81,7 @@ function App() {
         />
 
         <Route
-          path="pedidos_compra_fornecedor/:id"
+          path="pedidos_compra_fornecedor/:id_pedido_compra"
           element={<PedidoCompraDetalheFornecedor />}
         />
 

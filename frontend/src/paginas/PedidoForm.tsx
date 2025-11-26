@@ -23,7 +23,7 @@ function FormRequisicao({ titulo, setTitulo, descricao, setDescricao }: any) {
           />
         </div>
 
-        <div className="form-control w-full mt-2">
+        <div className="form-control w-full mt-2 flex flex-col">
           <label className="label">
             <span className="label-text font-semibold">Descrição Geral</span>
           </label>

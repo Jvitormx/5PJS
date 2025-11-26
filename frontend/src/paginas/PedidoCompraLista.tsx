@@ -52,6 +52,7 @@ function Lista() {
         <tbody>
           {pedidosCompra.map((pedido) => (
             <tr key={pedido.pk_id_pedido_compra}>
+              <th>{pedido.pk_id_pedido_compra}</th>
               <th>{pedido.data_assinatura}</th>
               <td>{pedido.esign_id}</td>
               <td>{pedido.titulo_requisicao}</td>

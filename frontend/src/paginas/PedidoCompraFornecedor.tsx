@@ -23,7 +23,7 @@ function Lista() {
     const fetchPedidos = async () => {
       try {
         const response = await api.get(
-          `/pedido_compra_fornecedor/${fornecedorId}`
+          `pedido_compra/pedido_compra_fornecedor/${fornecedorId}`
         );
         setPedidos(response.data);
       } catch (error) {
@@ -56,6 +56,7 @@ function Lista() {
         <tbody>
           {pedidosCompra.map((pedido) => (
             <tr key={pedido.pk_id_pedido_compra}>
+              <th>{pedido.pk_id_pedido_compra}</th>
               <th>{pedido.data_assinatura}</th>
               <td>{pedido.esign_id}</td>
               <td>{pedido.titulo_requisicao}</td>

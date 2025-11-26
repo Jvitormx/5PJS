@@ -1,0 +1,1 @@
+docker exec docuseal_postgres pg_dump -U postgres docuseal > ./docuseal_backup.sql

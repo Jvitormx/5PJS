@@ -18,11 +18,7 @@ export default function PedidoCompraDetalheFornecedor() {
 
     setLoading(true);
 
-    const today = new Date();
-    const data_emissao = today.toLocaleDateString("pt-BR");
-
     const payload = {
-      data_emissao: data_emissao,
       valor: Number(valor),
       status: "Pendente",
       ref_arquivo_fatura: pdfLink,
@@ -33,7 +29,7 @@ export default function PedidoCompraDetalheFornecedor() {
       await api.post("/info_fatura/", payload);
 
       alert("Fatura enviada com sucesso!");
-      navigate("/portal/fornecedor");
+      navigate("/portal");
     } catch (error) {
       console.error("Erro ao criar fatura:", error);
       alert("Falha ao enviar a fatura.");

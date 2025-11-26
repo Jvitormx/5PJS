@@ -38,12 +38,10 @@ export default function PedidoCompraDetalhe() {
     setLoading(true);
 
     try {
-      await api.put(`/fatura_update/${fatura.pk_id_fatura}`, {
-        status: "Confirmado",
-      });
+      await api.put(`info_fatura/fatura_update/${fatura.pk_id_fatura}`);
 
       alert("Fatura confirmada com sucesso.");
-      navigate("/portal/pedidos");
+      navigate("/portal");
     } catch (error) {
       console.error("Erro ao confirmar fatura:", error);
       alert("Falha ao confirmar a fatura.");

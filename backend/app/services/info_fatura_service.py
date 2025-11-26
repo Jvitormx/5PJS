@@ -23,9 +23,9 @@ def create_info_fatura(info_fatura: CreateInfoFatura, db: Session) -> dict:
     return {"mensagem": "Informação da fatura registrada com sucesso."}
 
 
-def get_info_fatura(pk_id_pedido_compra: int, db: Session) -> InfoFaturaGet:
+def get_info_fatura(id_pedido_compra: int, db: Session) -> InfoFaturaGet:
 
-    statemant = (select(InfoFatura).where(InfoFatura.fk_id_pedido_compra == pk_id_pedido_compra))
+    statemant = (select(InfoFatura).where(InfoFatura.fk_id_pedido_compra == id_pedido_compra))
     info_fatura_db = db.execute(statemant).scalar_one_or_none()
 
     if not info_fatura_db:
@@ -33,12 +33,12 @@ def get_info_fatura(pk_id_pedido_compra: int, db: Session) -> InfoFaturaGet:
 
     return info_fatura_db
 
-def update_info_fatura_status(pk_id_info_fatura: int, db: Session) -> dict:
+def update_info_fatura_status(id_fatura: int, db: Session) -> dict:
 
     statement = (
         select(InfoFatura, PedidoCompra)
         .join(PedidoCompra, InfoFatura.fk_id_pedido_compra == PedidoCompra.pk_id_pedido_compra)
-        .where(InfoFatura.pk_id_fatura == pk_id_info_fatura)
+        .where(InfoFatura.pk_id_fatura == id_fatura)
     )
 
     info_fatura_db = db.execute(statement).first()

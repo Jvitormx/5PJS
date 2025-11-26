@@ -16,14 +16,14 @@ def criar_novo_pedido_compra(pedido_compra: CreatePedidoCompra, id_gerente: int,
     return novo_pedido_compra
 
 
-@router.get('/pedido_compra_fornecedor/{id_fornecedor}', response_model=PedidoCompraGet)
+@router.get('/pedido_compra_fornecedor/{id_fornecedor}', response_model=List[PedidoCompraGet])
 def retornar_pedido_compra_fornecedor(id_fornecedor: int, db: Session = Depends(get_db)):
     novo_pedido_compra = pedido_compra_service.retornar_pedido_compra_fornecedor(id_fornecedor = id_fornecedor, db = db)
     return novo_pedido_compra
 
-@router.get('/pedido_compra_gerente', response_model=PedidoCompraGet)
+@router.get('/pedido_compra_gerente', response_model=List[PedidoCompraGet])
 def retornar_pedido_compra_gerente(db: Session = Depends(get_db)):
-    novo_pedido_compra = pedido_compra_service.retornar_pedido_compra_fornecedor(db = db)
+    novo_pedido_compra = pedido_compra_service.retornar_pedido_compra_gerente(db = db)
     return novo_pedido_compra
 
 

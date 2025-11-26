@@ -31,3 +31,6 @@ Thumbs.db
 #Env files
 .env
 
+# Docuseal docker volumes
+docuseal_pg_data/
+docuseal/

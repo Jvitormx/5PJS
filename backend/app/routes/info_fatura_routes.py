@@ -18,3 +18,10 @@ def criar_info_fatura(info_fatura: CreateInfoFatura, db: Session = Depends(get_d
 def retornar_info_fatura(id_pedido_compra: int, db: Session = Depends(get_db)):
     info_fatura = info_fatura_service.get_info_fatura(id_pedido_compra = id_pedido_compra, db = db)
     return info_fatura
+
+@router.put('/fatura_update/{id_fatura}')
+def confirmar_info_fatura(id_fatura: int, db: Session = Depends(get_db)):
+    info_fatura_atualizada = info_fatura_service.update_info_fatura_status(id_fatura = id_fatura, db = db)
+    if not info_fatura_atualizada:
+        return None
+    return info_fatura_atualizada

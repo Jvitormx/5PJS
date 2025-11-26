@@ -118,7 +118,7 @@ export default function Sidebar() {
                   to="/portal/pedido_compra_gerente"
                   className="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700"
                 >
-                  Lista de Pedidos de Compra (POs)_
+                  Lista de Pedidos de Compra (POs)
                 </Link>
               </li>
             </>
