@@ -168,9 +168,9 @@ export default function PedidoDetalhes() {
     if (!pedido) return;
 
     try {
-      await api.put(`/requisicoes/fechar/${pedido.pk_id_requisicao}`, {
-        status: "Fechada",
-      });
+      await api.put(
+        `/requisicoes/fechar/${pedido.pk_id_requisicao}?status=Fechada`
+      );
 
       alert("Requisição fechada com sucesso!");
       navigate("/portal/pedidos");
